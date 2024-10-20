@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6644280520737364425}
   - component: {fileID: 339281519330346036}
   - component: {fileID: 6196262091664515862}
+  - component: {fileID: 9026515723651409762}
   m_Layer: 0
   m_Name: Fire_Particle
   m_TagString: Untagged
@@ -152,3 +153,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.3593072, y: 1.8940514}
   m_EdgeRadius: 0
+--- !u!114 &9026515723651409762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4223504004178204984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bb6ced376e673743b6ac19da4f8586b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
