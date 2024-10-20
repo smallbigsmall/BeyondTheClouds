@@ -49,7 +49,7 @@ public class PlayerDataManager : MonoBehaviour
 
     private void OnApplicationQuit() {
         playerData.stageNum = 3;
-        playerData.dayCleared = true;
+        playerData.dayCleared = false;
 
         SavePlayerData();
     }
