@@ -32,6 +32,7 @@ public class WeatherMissionManager : MonoBehaviour
     public int currentDay = 0; //for test
     public List<MissionListOfDay> missionListOfDay = new List<MissionListOfDay>(); //모든 day의 미션
 
+    [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine;
 
     void Start()
     {
@@ -63,18 +64,62 @@ public class WeatherMissionManager : MonoBehaviour
     }
 
     void Drought(MissionLocation ML) {
-        Debug.Log("Location: " + ML.ToString() + " Mission type is drought");
+        if (ML == MissionLocation.farm2)
+        {
+            Farm2.GetComponent<FarmSetting>().FarmCropSettingYellow();
+        }
+        else if (ML == MissionLocation.farm3)
+        {
+            Farm3.GetComponent<FarmSetting>().FarmCropSettingYellow();
+        }
+        else if (ML == MissionLocation.myGarden)
+        {
+
+        }
+        else if (ML == MissionLocation.waterfall) { 
+        
+        }
     }
 
     void Overwatering(MissionLocation ML) {
         Debug.Log("Location: " + ML.ToString() + " Mission type is overwatering");
+        if (ML == MissionLocation.farm2)
+        {
+            Farm2.GetComponent<FarmSetting>().FarmCropSettingBlue();
+        }
+        else if (ML == MissionLocation.farm3)
+        {
+            Farm3.GetComponent<FarmSetting>().FarmCropSettingBlue();
+        }
+        else if (ML == MissionLocation.myGarden) { 
+        
+        }
     }
 
     void Heatstroke(MissionLocation ML) {
-        Debug.Log("Location: " + ML.ToString() + " Mission type is heatstroke");
+        if (ML == MissionLocation.farm2)
+        {
+
+        }
+        else if (ML == MissionLocation.farm3)
+        {
+
+        }
+        else if (ML == MissionLocation.mine)
+        {
+
+        }
     }
 
     void Fire(MissionLocation ML) {
         Debug.Log("Location: " + ML.ToString() + " Mission type is fire");
+        if (ML == MissionLocation.forest)
+        {
+            Forest.GetComponent<FireRandomInit>().RandomFirePosition();
+        }
+        else if (ML == MissionLocation.mountain)
+        {
+            Forest.GetComponent<FireRandomInit>().RandomFirePosition();
+        }
     }
 }
