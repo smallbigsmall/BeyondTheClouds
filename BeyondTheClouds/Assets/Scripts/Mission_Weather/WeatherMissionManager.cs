@@ -33,6 +33,9 @@ public class WeatherMissionManager : MonoBehaviour
     public List<MissionListOfDay> missionListOfDay = new List<MissionListOfDay>(); //모든 day의 미션
 
     [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine;
+    [SerializeField] GameObject MissionUIPrefab; //UI 상태 변경하는 스크립트 붙이기, UI 만들고 미션 스크립트에 넘겨주기
+
+    private int todayMissionCount = -1;
 
     void Start()
     {
@@ -41,9 +44,9 @@ public class WeatherMissionManager : MonoBehaviour
 
     void StartMissoinSetting() {
         List<MissionInform> todayMission = missionListOfDay[currentDay].missionList;
-        int size = todayMission.Count;
+        todayMissionCount = todayMission.Count;
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < todayMissionCount; i++) {
             switch (todayMission[i].Mission_Type) {
                 case MissionType.drought:
                     Drought(todayMission[i].Location);
@@ -74,10 +77,15 @@ public class WeatherMissionManager : MonoBehaviour
         }
         else if (ML == MissionLocation.myGarden)
         {
-
+            if (currentDay == 1) {
+                MyGarden.GetComponent<MyGardenSetting>().MyGardenSettingSprout();
+            } 
+            else{
+                MyGarden.GetComponent<MyGardenSetting>().FlowerSettingYellow();
+            }
         }
-        else if (ML == MissionLocation.waterfall) { 
-        
+        else if (ML == MissionLocation.waterfall) {
+            Waterfall.GetComponent<WaterfallMission>().missionSetting();
         }
     }
 
@@ -91,8 +99,8 @@ public class WeatherMissionManager : MonoBehaviour
         {
             Farm3.GetComponent<FarmSetting>().FarmCropSettingBlue();
         }
-        else if (ML == MissionLocation.myGarden) { 
-        
+        else if (ML == MissionLocation.myGarden) {
+            MyGarden.GetComponent<MyGardenSetting>().FlowerSettingBlue();
         }
     }
 
@@ -120,6 +128,15 @@ public class WeatherMissionManager : MonoBehaviour
         else if (ML == MissionLocation.mountain)
         {
             Forest.GetComponent<FireRandomInit>().RandomFirePosition();
+        }
+    }
+
+    public void MissionComplete() {
+        todayMissionCount -= 1;
+
+        if (todayMissionCount == 0) { 
+            //UI 옆으로 밀면서 숨기기
+            //이제 집으로 돌아가자. 라고 쓰인 UI 띄우기
         }
     }
 }

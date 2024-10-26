@@ -6,6 +6,7 @@ public class CropSetting : MonoBehaviour
 {
     enum CropType { Beetroot, Cabbage, Carrot, Cauliflower, Parsnip, Potato, Pumpkin, Radish }
 
+    private FarmSetting _farmSetting;
     [SerializeField] Sprite[] cropSpriteList;
     private Color color;
     private SpriteRenderer cropSpriteRenderer;
@@ -14,6 +15,7 @@ public class CropSetting : MonoBehaviour
 
     void Start()
     {
+        _farmSetting = gameObject.transform.parent.gameObject.GetComponent<FarmSetting>();
         cropSpriteRenderer = gameObject.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
         cropSpriteRenderer.sprite = cropSpriteList[((int)cropType)];
     }
@@ -33,6 +35,7 @@ public class CropSetting : MonoBehaviour
             {
                 ColorUtility.TryParseHtmlString("#FFFFFF", out color); //white
                 cropSpriteRenderer.color = color;
+                _farmSetting.countCropComplete();
             }
         }
     }
