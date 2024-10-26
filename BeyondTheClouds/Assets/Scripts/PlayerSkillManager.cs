@@ -43,7 +43,7 @@ public class PlayerSkillManager : MonoBehaviour
                         CheckTile(tilePos);
                     }
                     break;
-                case PlayerSkill.Raining: {
+                case PlayerSkill.Raining: {                
                         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
 
