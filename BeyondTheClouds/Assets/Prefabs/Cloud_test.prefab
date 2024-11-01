@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4162066400089941041}
   - component: {fileID: 8826831878169546561}
   - component: {fileID: 9112287343405649616}
+  - component: {fileID: 8404164451084684945}
   m_Layer: 3
   m_Name: Cloud_test
   m_TagString: Cloud
@@ -121,6 +122,21 @@ CapsuleCollider2D:
   m_Offset: {x: 0.0026961274, y: 0.0026957095}
   m_Size: {x: 0.5785323, y: 0.30532128}
   m_Direction: 1
+--- !u!114 &8404164451084684945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2333086008530076881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5283e1d921fac6449722cdc8ea298b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
+  forMoving: 0
+  isRaining: 0
 --- !u!1 &5019955270872981086
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,7 +181,7 @@ ParticleSystem:
   lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 0
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
@@ -227,7 +243,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -4918,12 +4934,12 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1000
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 1
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2

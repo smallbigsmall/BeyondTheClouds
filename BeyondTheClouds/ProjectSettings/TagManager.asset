@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Cloud
+  - House
+  - Tree1
+  - Tree2
+  - Deco
   layers:
   - Default
   - TransparentFX
