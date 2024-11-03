@@ -80,5 +80,7 @@ public class PlayerMoveController : MonoBehaviour
         this.onCloud = onCloud;
     }
 
-    
+    private void OnTriggerEnter2D(Collider2D collision) {
+        Debug.Log($"Collision: {collision.gameObject.name}");
+    }
 }

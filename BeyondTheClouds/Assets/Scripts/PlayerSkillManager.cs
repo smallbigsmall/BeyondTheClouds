@@ -170,4 +170,6 @@ public class PlayerSkillManager : MonoBehaviour
         playerSkill = (PlayerSkill)skillNum;
         Debug.Log($"Current skill: {playerSkill}");
     }
+
+    
 }

@@ -9,6 +9,7 @@ TagManager:
   - Tree1
   - Tree2
   - Deco
+  - NightMap
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - Cloud
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 
