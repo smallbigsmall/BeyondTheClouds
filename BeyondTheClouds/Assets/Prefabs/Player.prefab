@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09809fc84d1d6a5478f5b647359f3cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wind_projectile: {fileID: 2122849804754850108, guid: 4b693e02e9d17144fa98bbe3da4ab68e, type: 3}
 --- !u!50 &6953734020797321607
 Rigidbody2D:
   serializedVersion: 4
@@ -108,7 +109,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7038168282548740468}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -173,7 +174,19 @@ MonoBehaviour:
     m_ActionId: 4047fe5d-cce4-439f-82a5-a9849b18a6e6
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1882491254192836135}
+        m_TargetAssemblyTypeName: PlayerMoveController, Assembly-CSharp
+        m_MethodName: OnPlayerAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f89dfe93-68a1-4bfd-8de9-1fb6839bad17
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:

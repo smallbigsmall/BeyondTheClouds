@@ -17,6 +17,9 @@ public class PlayerMoveController : MonoBehaviour
     private bool isWalking, onCloud;
 
     List<RaycastHit2D> castColisitions = new List<RaycastHit2D>();
+
+    [SerializeField]
+    private GameObject wind_projectile;
     // Start is called before the first frame update
     void Start()
     {
@@ -82,5 +85,15 @@ public class PlayerMoveController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) {
         Debug.Log($"Collision: {collision.gameObject.name}");
+    }
+
+    public void OnPlayerAttack(InputAction.CallbackContext context) {
+        if(context.phase == InputActionPhase.Started) {
+            Debug.Log(animator.GetFloat("XDir") + " " + animator.GetFloat("YDir"));
+            Vector3 initPos = transform.position;
+            GameObject wind = Instantiate(wind_projectile, initPos, Quaternion.identity);
+            wind.GetComponent<WindProjectile>().ShootWind(new Vector2(animator.GetFloat("XDir"), animator.GetFloat("YDir")));
+        }
+        
     }
 }

@@ -10,6 +10,7 @@ TagManager:
   - Tree2
   - Deco
   - NightMap
+  - NightEnemy
   layers:
   - Default
   - TransparentFX

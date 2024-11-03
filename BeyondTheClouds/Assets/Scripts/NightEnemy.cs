@@ -16,18 +16,24 @@ public class NightEnemy : MonoBehaviour
     private float boundOffset = 6f;
     private Coroutine attackPlayerRoutine;
 
-    [SerializeField]
-    private GameObject light;
+    private int currentlife;
+    private int totalLife = 5;
+    private SpriteRenderer lightSprite;
 
     [SerializeField]
-    private Transform cloudRegion;
+    private GameObject lightAttackObj;
+
+    [SerializeField]
+    private Transform cloudRegion; // change GameObject.Find
 
     // Start is called before the first frame update
     void Start()
     {
         InitializeRegions();
         SpawnEnemy();
+        currentlife = totalLife;
         targetPlayer = GameObject.FindWithTag("Player").transform;
+        lightSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
     private void InitializeRegions() {
@@ -174,11 +180,20 @@ public class NightEnemy : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             Debug.Log("Attack player");
-            GameObject attackLight = Instantiate(light, new Vector2(targetPlayer.position.x, targetPlayer.position.y + 2), Quaternion.identity);
+            GameObject attackLight = Instantiate(lightAttackObj, new Vector2(targetPlayer.position.x, targetPlayer.position.y + 2), Quaternion.identity);
 
             yield return new WaitForSeconds(0.8f);
             Destroy(attackLight);
         }      
         
+    }
+
+    public void Hit() {
+        currentlife--;
+        var lightSpriteColor = lightSprite.color;
+        lightSpriteColor.a = (float)currentlife / totalLife;
+
+        lightSprite.color = lightSpriteColor;
+        if (currentlife == 0) Destroy(gameObject);
     }
 }

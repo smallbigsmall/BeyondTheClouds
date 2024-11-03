@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 1396690958802276001}
   m_Layer: 0
   m_Name: NightEnemy1
-  m_TagString: Untagged
+  m_TagString: NightEnemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -219,8 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b820808c196afb44b462a100f600e84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  light: {fileID: 0}
-  background: {fileID: 0}
+  lightAttackObj: {fileID: 2106007375048993835, guid: c2380ff9e28f8aa4296aee8ad153104c, type: 3}
   cloudRegion: {fileID: 0}
 --- !u!50 &1396690958802276001
 Rigidbody2D:
