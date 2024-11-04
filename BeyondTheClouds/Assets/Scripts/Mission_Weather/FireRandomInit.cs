@@ -2,9 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireRandomInit : MonoBehaviour
+public class FireRandomInit : MissionSettingWithQuest
 {
+    private int fireCount;
+    [SerializeField] WeatherMissionManager _weatherMissionManager;
+
     public void RandomFirePosition() {
-        gameObject.SetActive(true);
+        fireCount = transform.GetChild(0).childCount;
+        gameObject.transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public void FireComplete() {
+        fireCount -= 1;
+        if (fireCount == 0) {
+            _weatherMissionManager.MissionComplete();
+            CompleteQuestUI();
+        }
+    }
+
+    public void ChildHeatStrokeSetting()
+    {
+        transform.GetChild(1).GetComponent<HeatStroke>().MakeNPCHeatStroke(_weatherMissionManager);
     }
 }

@@ -11,7 +11,10 @@ public class Fire_rainCout : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Rain")) {
             life -= 1;
-            if (life == 0) gameObject.SetActive(false);
+            if (life == 0) {
+                transform.parent.parent.gameObject.GetComponent<FireRandomInit>().FireComplete();
+                gameObject.SetActive(false);
+            }
         }
     }
 

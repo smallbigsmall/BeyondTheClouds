@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class WeatherMissionManager : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class WeatherMissionManager : MonoBehaviour
     //  이벤트세부2
     //  이벤트 종류
     //  이벤트 장소
+
+
+    //여기서 NPC한테 퀘스트 마크 띄우게끔 시킬건데 My Garden의 경우
+    //NPC가 없으므로 스킵. 대신 플레이어한테 퀘스트 마크가 떠야함
 
     public enum MissionType { None, drought, overwatering, heatstroke, fire, Random};
     public enum MissionLocation { None, myGarden, farm2, farm3, waterfall, forest, mountain, mine, Random };
@@ -33,9 +38,10 @@ public class WeatherMissionManager : MonoBehaviour
     public List<MissionListOfDay> missionListOfDay = new List<MissionListOfDay>(); //모든 day의 미션
 
     [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine;
-    [SerializeField] GameObject MissionUIPrefab; //UI 상태 변경하는 스크립트 붙이기, UI 만들고 미션 스크립트에 넘겨주기
 
     private int todayMissionCount = -1;
+
+    [SerializeField] GameObject QuestUIPrefab, QuestScrollView;
 
     void Start()
     {
@@ -49,31 +55,33 @@ public class WeatherMissionManager : MonoBehaviour
         for (int i = 0; i < todayMissionCount; i++) {
             switch (todayMission[i].Mission_Type) {
                 case MissionType.drought:
-                    Drought(todayMission[i].Location);
+                    Drought(todayMission[i].Location, todayMission[i].Mission_Type);
                     break;
                 case MissionType.overwatering:
-                    Overwatering(todayMission[i].Location);
+                    Overwatering(todayMission[i].Location, todayMission[i].Mission_Type);
                     break;
                 case MissionType.heatstroke:
-                    Heatstroke(todayMission[i].Location);
+                    Heatstroke(todayMission[i].Location, todayMission[i].Mission_Type);
                     break;
                 case MissionType.fire:
-                    Fire(todayMission[i].Location);
+                    Fire(todayMission[i].Location, todayMission[i].Mission_Type);
                     break;
-                default:
+                default:    
                     break;
             }
         }
     }
 
-    void Drought(MissionLocation ML) {
+    void Drought(MissionLocation ML, MissionType MT) {
         if (ML == MissionLocation.farm2)
         {
             Farm2.GetComponent<FarmSetting>().FarmCropSettingYellow();
+            CallChildQuestMethod(Farm2, MT.ToString());
         }
         else if (ML == MissionLocation.farm3)
         {
             Farm3.GetComponent<FarmSetting>().FarmCropSettingYellow();
+            CallChildQuestMethod(Farm3, MT.ToString());
         }
         else if (ML == MissionLocation.myGarden)
         {
@@ -86,57 +94,84 @@ public class WeatherMissionManager : MonoBehaviour
         }
         else if (ML == MissionLocation.waterfall) {
             Waterfall.GetComponent<WaterfallMission>().missionSetting();
+            CallChildQuestMethod(Waterfall, MT.ToString());
         }
     }
 
-    void Overwatering(MissionLocation ML) {
+    void Overwatering(MissionLocation ML, MissionType MT) {
         Debug.Log("Location: " + ML.ToString() + " Mission type is overwatering");
         if (ML == MissionLocation.farm2)
         {
             Farm2.GetComponent<FarmSetting>().FarmCropSettingBlue();
+            CallChildQuestMethod(Farm2, MT.ToString());
         }
         else if (ML == MissionLocation.farm3)
         {
             Farm3.GetComponent<FarmSetting>().FarmCropSettingBlue();
+            CallChildQuestMethod(Farm3, MT.ToString());
         }
         else if (ML == MissionLocation.myGarden) {
             MyGarden.GetComponent<MyGardenSetting>().FlowerSettingBlue();
         }
     }
 
-    void Heatstroke(MissionLocation ML) {
+    void Heatstroke(MissionLocation ML, MissionType MT) {
         if (ML == MissionLocation.farm2)
         {
-
+            Farm2.GetComponent<FarmSetting>().ChildHeatStrokeSetting();
+            CallChildQuestMethod(Farm2, MT.ToString());
         }
         else if (ML == MissionLocation.farm3)
         {
-
+            Farm3.GetComponent<FarmSetting>().ChildHeatStrokeSetting();
+            CallChildQuestMethod(Farm3, MT.ToString());
         }
         else if (ML == MissionLocation.mine)
         {
-
+            CallChildQuestMethod(Mine, MT.ToString());
         }
     }
 
-    void Fire(MissionLocation ML) {
+    void Fire(MissionLocation ML, MissionType MT) {
         Debug.Log("Location: " + ML.ToString() + " Mission type is fire");
         if (ML == MissionLocation.forest)
         {
             Forest.GetComponent<FireRandomInit>().RandomFirePosition();
+            CallChildQuestMethod(Forest, MT.ToString());
         }
         else if (ML == MissionLocation.mountain)
         {
-            Forest.GetComponent<FireRandomInit>().RandomFirePosition();
+            Mountain.GetComponent<FireRandomInit>().RandomFirePosition();
+            CallChildQuestMethod(Mountain, MT.ToString());
         }
     }
 
     public void MissionComplete() {
         todayMissionCount -= 1;
 
-        if (todayMissionCount == 0) { 
+        if (todayMissionCount == 0) {
             //UI 옆으로 밀면서 숨기기
             //이제 집으로 돌아가자. 라고 쓰인 UI 띄우기
+            Debug.Log("이제 집으로 돌아가자");
+            GameObject newQuest = Instantiate(QuestUIPrefab);
+            newQuest.transform.SetParent(QuestScrollView.transform);
+            newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "이제 집으로\n돌아가자!";
+        }
+    }
+
+    public void CallChildQuestMethod(GameObject area, string Mission) {
+        int temp = area.transform.childCount;
+        GameObject NPCobj = null;
+
+        for (int i = 0; i < temp; i++) {
+            if (area.transform.GetChild(i).gameObject.CompareTag("NPC")) {
+                NPCobj = area.transform.GetChild(i).gameObject;
+                break;
+            }
+        }
+
+        if (NPCobj != null) {
+            NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission);
         }
     }
 }
