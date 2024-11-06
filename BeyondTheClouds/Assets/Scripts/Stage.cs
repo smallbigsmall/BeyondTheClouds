@@ -36,6 +36,8 @@ public class Stage : MonoBehaviour
         }
         else {
             Debug.Log($"Play {stageNum} day game");
+            GameManager.Instance.SetCurrentPlayerData(stageNum, false);
+            GameManager.Instance.LoadMainMap();
         }
         //not cleared -> just play day time game
     }

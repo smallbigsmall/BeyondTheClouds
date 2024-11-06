@@ -4,86 +4,35 @@ using UnityEngine;
 
 public class NightEnemy : MonoBehaviour
 {
-    private List<Dictionary<string, Vector2>> regionList;
+    
     private Transform targetPlayer;
     private Vector2 targetPosition = Vector2.zero;
     private Vector2 currentPos;
+    private int currentRegion;
     private float playerDistance;
     private bool outside = true;
-    private int currentRegion = -1;
+    private List<Dictionary<string, Vector2>> regionList;
+
+
     private bool isArrive;
-    private bool wandering = true;
-    private float boundOffset = 6f;
+    private bool wandering = false;
+   
     private Coroutine attackPlayerRoutine;
 
     private int currentlife;
-    private int totalLife = 5;
+    private int totalLife;
     private SpriteRenderer lightSprite;
 
     [SerializeField]
     private GameObject lightAttackObj;
 
-    [SerializeField]
-    private Transform cloudRegion; // change GameObject.Find
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        InitializeRegions();
-        SpawnEnemy();
-        currentlife = totalLife;
         targetPlayer = GameObject.FindWithTag("Player").transform;
         lightSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
-    }
-
-    private void InitializeRegions() {
-        regionList = new List<Dictionary<string, Vector2>>();
-
-        for(int i = 0; i < 4; i++) {
-            Dictionary<string, Vector2> region = new Dictionary<string, Vector2>();
-            region["minBound"] = new Vector2(0, 0);
-            region["maxBound"] = new Vector2(0, 0);
-            regionList.Add(region);
-        }
-
-        Vector2 cloudRegion_pos = cloudRegion.position;
-        Vector2 cloudRegion_scale = cloudRegion.localScale;
-        regionList[0]["minBound"] = new Vector2(cloudRegion_pos.x + cloudRegion_scale.x / 2,
-            cloudRegion_pos.y - cloudRegion_scale.y / 2);
-        regionList[0]["maxBound"] = new Vector2(cloudRegion_pos.x + cloudRegion_scale.x / 2 + boundOffset,
-            cloudRegion_pos.y + cloudRegion_scale.y / 2);
-
-        regionList[1]["minBound"] = new Vector2(cloudRegion_pos.x - cloudRegion_scale.x / 2,
-            cloudRegion_pos.y + cloudRegion_scale.y / 2);
-        regionList[1]["maxBound"] = new Vector2(cloudRegion_pos.x + cloudRegion_scale.x / 2,
-            cloudRegion_pos.y + cloudRegion_scale.y / 2 + boundOffset);
-
-        regionList[2]["minBound"] = new Vector2(cloudRegion_pos.x - cloudRegion_scale.x / 2 - boundOffset,
-            cloudRegion_pos.y - cloudRegion_scale.y / 2);
-        regionList[2]["maxBound"] = new Vector2(cloudRegion_pos.x - cloudRegion_scale.x / 2,
-            cloudRegion_pos.y + cloudRegion_scale.y / 2);
-
-        regionList[3]["minBound"] = new Vector2(cloudRegion_pos.x - cloudRegion_scale.x / 2,
-            cloudRegion_pos.y - cloudRegion_scale.y / 2 - boundOffset);
-        regionList[3]["maxBound"] = new Vector2(cloudRegion_pos.x + cloudRegion_scale.x / 2,
-            cloudRegion_pos.y - cloudRegion_scale.y / 2);
-    }
-
-
-    private void SpawnEnemy() {
-        currentRegion = Random.Range(0, 4);
-
-        Vector2 minBound = regionList[currentRegion]["minBound"];
-        Vector2 maxBound = regionList[currentRegion]["maxBound"];
-
-        float xPos = Random.Range(minBound.x, maxBound.x);
-        float yPos = Random.Range(minBound.y, maxBound.y);
-
-        transform.position = new Vector2(xPos, yPos);
-
-        currentPos = transform.position;
-
-        FindNextRegion();
     }
 
     private void FindNextRegion() {
@@ -96,7 +45,8 @@ public class NightEnemy : MonoBehaviour
                     currentRegion = 2 * newRegion + 1;
                     newPosX = regionList[currentRegion]["maxBound"].x;
                     newPosY = Random.Range(regionList[currentRegion]["minBound"].y, regionList[currentRegion]["maxBound"].y);
-                }break;
+                }
+                break;
             case 1: {
                     currentRegion = 2 * newRegion;
                     newPosX = Random.Range(regionList[currentRegion]["minBound"].x, regionList[currentRegion]["maxBound"].x);
@@ -168,8 +118,6 @@ public class NightEnemy : MonoBehaviour
             if(attackPlayerRoutine != null) {
                 StopCoroutine(AttackPlayer());
                 attackPlayerRoutine = null;
-
-                SpawnEnemy();
             }
         }
     }
@@ -189,11 +137,38 @@ public class NightEnemy : MonoBehaviour
     }
 
     public void Hit() {
+        MainMapManager mainMapManager;
         currentlife--;
         var lightSpriteColor = lightSprite.color;
         lightSpriteColor.a = (float)currentlife / totalLife;
 
         lightSprite.color = lightSpriteColor;
-        if (currentlife == 0) Destroy(gameObject);
+        if (currentlife == 0) {
+            mainMapManager = FindAnyObjectByType<MainMapManager>();
+            mainMapManager.DecreaseNightEnemyCount();
+            Destroy(gameObject);
+        }
+    }
+
+    public void StartWandering() {
+        FindNextRegion();
+        wandering = true;
+    }
+
+    public void SetCurrentPos(Vector2 pos) {
+        transform.position = pos;
+    }
+
+    public void SetTotalLife(int life) {
+        totalLife = life;
+        currentlife = totalLife;
+    }
+
+    public void SetRegionList(List<Dictionary<string, Vector2>> regionList) {
+        this.regionList = regionList;
+    }
+
+    public void SetCurrentRegion(int region) {
+        currentRegion = region;
     }
 }

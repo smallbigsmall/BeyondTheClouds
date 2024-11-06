@@ -20,6 +20,8 @@ public class PlayerDataManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        playerData = new PlayerData();
     }
 
 
@@ -47,11 +49,32 @@ public class PlayerDataManager : MonoBehaviour
 
     }
 
+    public int GetSavedStageNum() {
+        return playerData.stageNum;
+    }
+
+    public bool GetSavedDayCleared() {
+        return playerData.dayCleared;
+    }
+
+    public void SetPlayerGender(char gender) {
+        playerData.gender = gender;
+    }
+
+    public void UpdatePlayerData(int day, bool dayCleared) {
+        playerData.stageNum = day;
+        playerData.dayCleared = dayCleared;
+    }
+
     private void OnApplicationQuit() {
+        //for testing
+        playerData.gender = 'm';
         playerData.stageNum = 3;
         playerData.dayCleared = false;
 
         SavePlayerData();
     }
+
+    
 
 }

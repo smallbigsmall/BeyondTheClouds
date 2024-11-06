@@ -112,6 +112,8 @@ public class StageManager : MonoBehaviour
             // Daytime play again?
             Debug.Log($"Play {selectedStage} day game");
         }
+        GameManager.Instance.SetCurrentPlayerData(selectedStage, false);
+        GameManager.Instance.LoadMainMap();
         popUpUI.SetActive(false);
     }
 
@@ -122,8 +124,11 @@ public class StageManager : MonoBehaviour
         }
         else if (selectedStage < totalStageCount) { //stage
             // Daytime play again?
-            Debug.Log($"Play {selectedStage} night game");
+            Debug.Log($"Play {selectedStage} night game");           
         }
+
+        GameManager.Instance.SetCurrentPlayerData(selectedStage, true);
+        GameManager.Instance.LoadMainMap();
         popUpUI.SetActive(false);
     }
 

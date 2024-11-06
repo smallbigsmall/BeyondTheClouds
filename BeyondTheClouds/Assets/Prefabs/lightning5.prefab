@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 705913027962367871}
   m_Layer: 0
   m_Name: lightning5
-  m_TagString: Untagged
+  m_TagString: Lighting
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

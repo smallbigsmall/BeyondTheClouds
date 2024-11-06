@@ -16,6 +16,8 @@ public class PlayerMoveController : MonoBehaviour
     public bool isMoving { get; private set; }
     private bool isWalking, onCloud;
 
+    private MainMapManager mainMapManager;
+
     List<RaycastHit2D> castColisitions = new List<RaycastHit2D>();
 
     [SerializeField]
@@ -27,6 +29,7 @@ public class PlayerMoveController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         collider = GetComponent<Collider2D>();
+        mainMapManager = FindAnyObjectByType<MainMapManager>();
     }
 
     // Update is called once per frame
@@ -85,11 +88,17 @@ public class PlayerMoveController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) {
         Debug.Log($"Collision: {collision.gameObject.name}");
+
+        if (collision.CompareTag("Lighting")) {
+            mainMapManager.DecreasePlayerHp(5);
+        }
     }
 
     public void OnPlayerAttack(InputAction.CallbackContext context) {
+        if (!GameManager.Instance.GetCurrentPlayerData().dayCleared) return;
+
+        //night time
         if(context.phase == InputActionPhase.Started) {
-            Debug.Log(animator.GetFloat("XDir") + " " + animator.GetFloat("YDir"));
             Vector3 initPos = transform.position;
             GameObject wind = Instantiate(wind_projectile, initPos, Quaternion.identity);
             wind.GetComponent<WindProjectile>().ShootWind(new Vector2(animator.GetFloat("XDir"), animator.GetFloat("YDir")));

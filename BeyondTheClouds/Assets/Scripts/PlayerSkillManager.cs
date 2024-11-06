@@ -9,7 +9,6 @@ using UnityEngine.Tilemaps;
 public enum PlayerSkill { None, Creating, Raining, Removing, Moving}
 public class PlayerSkillManager : MonoBehaviour
 {
-    [SerializeField]
     private Transform player;
     [SerializeField]
     private GameObject cloudPrefab;
@@ -19,7 +18,7 @@ public class PlayerSkillManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -167,6 +166,9 @@ public class PlayerSkillManager : MonoBehaviour
     }*/
 
     public void SetPlayerSkill(int skillNum) {
+        if(player == null) {
+            player = FindAnyObjectByType<PlayerMoveController>().transform;
+        }
         playerSkill = (PlayerSkill)skillNum;
         Debug.Log($"Current skill: {playerSkill}");
     }
