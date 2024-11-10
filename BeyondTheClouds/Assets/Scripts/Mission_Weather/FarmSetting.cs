@@ -50,5 +50,9 @@ public class FarmSetting : MissionSettingWithQuest
      * 1. 구름 고정하기
      * 2. 작물 변화 못하게 하기
      * 이 두가지 중에서 해야할것같은데 고민스
+     * 
+     * 
+     * 생각해보니깐 Overwatering이면 그림자로 가리는게 아니라 그림자를 치워야함...
+     * 수정 필요
      */
 }

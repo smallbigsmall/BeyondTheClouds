@@ -8,7 +8,6 @@ public class Dialogue
     public string Mission;
     public int Day;
     public int Index;
-    public string Name;
     public List<Line> Lines;
     public string Quest;
 }
@@ -20,5 +19,6 @@ public class Line {
 
 [System.Serializable]
 public class DialogueList {
+    public string Name;
     public List<Dialogue> Dialogues;
 }

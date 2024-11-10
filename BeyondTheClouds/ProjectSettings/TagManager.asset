@@ -9,6 +9,7 @@ TagManager:
   - QuestUIScrollView
   - Rain
   - Shadow
+  - DialogueCanvas
   layers:
   - Default
   - TransparentFX

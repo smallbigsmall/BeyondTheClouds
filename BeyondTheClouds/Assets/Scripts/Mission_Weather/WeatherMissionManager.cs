@@ -150,8 +150,6 @@ public class WeatherMissionManager : MonoBehaviour
         todayMissionCount -= 1;
 
         if (todayMissionCount == 0) {
-            //UI 옆으로 밀면서 숨기기
-            //이제 집으로 돌아가자. 라고 쓰인 UI 띄우기
             Debug.Log("이제 집으로 돌아가자");
             GameObject newQuest = Instantiate(QuestUIPrefab);
             newQuest.transform.SetParent(QuestScrollView.transform);

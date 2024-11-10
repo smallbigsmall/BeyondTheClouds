@@ -7,6 +7,7 @@ using TMPro;
 public class MissionSettingWithQuest : MonoBehaviour
 {
     public GameObject QuestUI;
+    public GameObject mapQuestMark;
     private Image questMainImg;
 
     public void CompleteQuestUI() {
@@ -14,5 +15,6 @@ public class MissionSettingWithQuest : MonoBehaviour
         questMainImg = QuestUI.transform.GetChild(0).GetComponent<Image>();
         questMainImg.color = new Color(questMainImg.color.r, questMainImg.color.g, questMainImg.color.b, 0.5f);
         QuestUI.transform.GetChild(1).gameObject.SetActive(true);
+        mapQuestMark.SetActive(false);
     }
 }
