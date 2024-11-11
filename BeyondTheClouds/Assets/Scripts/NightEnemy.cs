@@ -12,7 +12,7 @@ public class NightEnemy : MonoBehaviour
     private float playerDistance;
     private bool outside = true;
     private List<Dictionary<string, Vector2>> regionList;
-
+    private SpriteRenderer spriteRenderer;
 
     private bool isArrive;
     private bool wandering = false;
@@ -33,6 +33,7 @@ public class NightEnemy : MonoBehaviour
     {
         targetPlayer = GameObject.FindWithTag("Player").transform;
         lightSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void FindNextRegion() {
@@ -68,8 +69,6 @@ public class NightEnemy : MonoBehaviour
 
         }
 
-        Debug.Log(currentRegion);
-
         targetPosition.x = newPosX;
         targetPosition.y = newPosY;
 
@@ -78,16 +77,23 @@ public class NightEnemy : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        if(transform.position.x > -14) {
+            spriteRenderer.flipX = true;
+        }
+        else {
+            spriteRenderer.flipX = false;
+        }
 
         playerDistance = Vector2.Distance(transform.position, targetPlayer.position);
 
         if(playerDistance <= 8f && wandering) {
+            Debug.Log($"{transform.name}: Stop wandering");
             wandering = false;
             currentPos = transform.position;
         }
-        else if(playerDistance > 8f) {
+        else if(playerDistance > 8f && !wandering) {
+            ReturnToOutside();
             wandering = true;
-            outside = true;
         }
 
         if (wandering) {
@@ -117,9 +123,36 @@ public class NightEnemy : MonoBehaviour
         }else if (wandering) {
             if(attackPlayerRoutine != null) {
                 StopCoroutine(AttackPlayer());
-                attackPlayerRoutine = null;
+                attackPlayerRoutine = null;            
             }
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.CompareTag("NightMap")) {
+            outside = true;
+        }
+    }
+
+    private void ReturnToOutside() {
+        Vector2 currentPos = transform.position;
+        if(currentPos.x > -14 && currentPos.y > -81) {
+            currentRegion = 0;
+        }else if(currentPos.x<-14 && currentPos.y > -81) {
+            currentRegion = 1;
+        }else if(currentPos.x < -14 && currentPos.y < -81) {
+            currentRegion = 2;
+        }else if(currentPos.x>-14 && currentPos.y < -81) {
+            currentRegion = 3;
+        }
+        Vector2 minBound = regionList[currentRegion]["minBound"];
+        Vector2 maxBound = regionList[currentRegion]["maxBound"];
+
+        float xPos = Random.Range(minBound.x, maxBound.x);
+        float yPos = Random.Range(minBound.y, maxBound.y);
+        targetPosition = new Vector2(xPos, yPos);
+
+        isArrive = false;
     }
 
     

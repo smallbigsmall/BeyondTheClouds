@@ -11,7 +11,7 @@ public class MainMapManager : MonoBehaviour
     private GameObject fPlayer, mPlayer;
 
     [SerializeField]
-    private GameObject nightEnemyObj;
+    private List<GameObject> nightEnemyPrefList;
 
     [SerializeField]
     private Transform cloudRegion;
@@ -21,7 +21,7 @@ public class MainMapManager : MonoBehaviour
 
     private List<Dictionary<string, Vector2>> regionList;
     private int currentRegion = -1;
-    private float boundOffset = 6f;
+    private float boundOffset = 3.5f;
     private int playerHp = 100;
     private int nightEnemyNum = 1;
 
@@ -67,7 +67,13 @@ public class MainMapManager : MonoBehaviour
         InitializeRegions();
         // according dayNum, change setting of enemy 
         // adjust for loop bound
-        SpawnEnemy();
+
+        int stage = currentPlayerData.stageNum;
+        nightEnemyNum = Random.Range(7-stage, 10-stage);
+        for(int i = 0; i<nightEnemyNum; i++) {
+            SpawnEnemy();
+        }
+        
     }
 
     private void InitializeRegions() {
@@ -112,7 +118,9 @@ public class MainMapManager : MonoBehaviour
         float xPos = Random.Range(minBound.x, maxBound.x);
         float yPos = Random.Range(minBound.y, maxBound.y);
 
-        GameObject enemy = Instantiate(nightEnemyObj);
+        int randEnemyNum = Random.Range(0, nightEnemyPrefList.Count-1);
+
+        GameObject enemy = Instantiate(nightEnemyPrefList[randEnemyNum]);
         NightEnemy nightEnemy = enemy.GetComponent<NightEnemy>();
         nightEnemy.SetRegionList(regionList);
         nightEnemy.SetCurrentRegion(currentRegion);
@@ -148,13 +156,11 @@ public class MainMapManager : MonoBehaviour
     }
 
     private void SetGameEndUI(bool isCleared) {
-        if (isCleared) {
-            nextStepBtn.onClick.AddListener(InitializeNextStepGame);
+        if (isCleared) {            
             nextStepBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "다음 단계";
             resultText.text = "Game Clear";
         }
         else {
-            nextStepBtn.onClick.AddListener(Replay);
             nextStepBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "다시 플레이";
             resultText.text = "Game Over";
         }
@@ -162,13 +168,11 @@ public class MainMapManager : MonoBehaviour
 
     }
 
-    private void Replay() {
-
+    private void ReloadMainMap() {
+        string mainMap = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(mainMap);
     }
-
-    private void InitializeNextStepGame() {
-
-    }
+   
 
     private void GoToMainMenu() {
         SceneManager.LoadScene("MainMenu");
@@ -182,6 +186,7 @@ public class MainMapManager : MonoBehaviour
         nextStepBtn = gameEndPanel.GetChild(1).GetComponent<Button>();
         stageBtn = gameEndPanel.GetChild(2).GetComponent<Button>();
 
+        nextStepBtn.onClick.AddListener(ReloadMainMap);
         stageBtn.onClick.AddListener(GoToMainMenu);
     }
 
