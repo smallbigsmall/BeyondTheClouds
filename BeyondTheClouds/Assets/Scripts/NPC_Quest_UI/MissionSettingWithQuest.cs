@@ -7,7 +7,7 @@ using TMPro;
 public class MissionSettingWithQuest : MonoBehaviour
 {
     public GameObject QuestUI;
-    public GameObject mapQuestMark;
+    public GameObject mapQuestMark; //다른 오브젝트로부터 할당받을거라 인스펙터에서 신경쓸필요X
     private Image questMainImg;
 
     public void CompleteQuestUI() {

@@ -14,6 +14,7 @@ public class FlowerSetting : MonoBehaviour
     private int MissionMode = 1; //0 == sprout -> flower, 1 == Drought, 2 == Overwatering
     private MyGardenSetting _myGardenSetting;
     private bool isTodayMission = false;
+    private int lifeForShadow = 0;
 
     void Start()
     {
@@ -74,9 +75,10 @@ public class FlowerSetting : MonoBehaviour
                 _myGardenSetting.countFlowerComplete();
             }
         } else if (collision.gameObject.CompareTag("Shadow") && MissionMode == 2 && isTodayMission) {
-            ColorUtility.TryParseHtmlString("#FFFFFF", out color); //white
+            if(lifeForShadow == 0) _myGardenSetting.countFlowerOverwatering();
+            lifeForShadow++;
+            ColorUtility.TryParseHtmlString("#55D9FF", out color); //white
             flowerSpriteRenderer.color = color;
-            _myGardenSetting.countFlowerComplete();
         }
     }
 
@@ -84,9 +86,17 @@ public class FlowerSetting : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Shadow") && MissionMode == 2 && isTodayMission)
         {
-            ColorUtility.TryParseHtmlString("#CF9700", out color); //white
-            flowerSpriteRenderer.color = color;
-            _myGardenSetting.countFlowerDrought();
+            lifeForShadow--;
+            if (lifeForShadow == 0) {
+                ColorUtility.TryParseHtmlString("#FFFFFF", out color); //white
+                flowerSpriteRenderer.color = color;
+                _myGardenSetting.countFlowerOverwatering();
+            }
         }
+    }
+
+    public void MissionCleared()
+    {
+        isTodayMission = false;
     }
 }

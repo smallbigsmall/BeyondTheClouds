@@ -14,9 +14,10 @@ public class NPCQuest : MonoBehaviour
     public GameObject DialogueCanvas, ChoiceUI;
     private TextMeshProUGUI LineText, npcName, ChoiceUILineText;
     public int day; //For test
-    private int QuestListIndex = -1, lineTotalCount = 0, currentLineIndex = 0;
+    private int DialogueIndex = -1, lineTotalCount = 0, currentLineIndex = 0, missionIndex = -1;
     private bool canChangeLine = false, isQuestAccepted = false;
     private Button acceptButton, rejectButton;
+    private string mission = "None";
 
     DialogueList dialogueList;
     [SerializeField] TextAsset jsonDialogue;
@@ -47,7 +48,7 @@ public class NPCQuest : MonoBehaviour
                     canChangeLine = false;
                     acceptButton.onClick.RemoveListener(() => { AcceptQuest(); });
                     rejectButton.onClick.RemoveListener(() => { RejectQuest(); });
-                    QuestListIndex = dialogueList.Dialogues.Count - 1; //임의 설정. 일상 대화가 있는 index로 설정해주는 부분
+                    DialogueIndex = 0; //임의 설정. 일상 대화가 있는 index로 설정해주는 부분
                 }
             }
             else {
@@ -59,7 +60,7 @@ public class NPCQuest : MonoBehaviour
     public void AddQuestUI() {
         newQuest = Instantiate(QuestUI);
         newQuest.transform.SetParent(QuestUIScrollView.transform);
-        newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = dialogueList.Dialogues[QuestListIndex].Quest;
+        newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Quest;
         GetComponentInParent<MissionSettingWithQuest>().QuestUI = newQuest;
         GetComponentInParent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
     }
@@ -68,7 +69,7 @@ public class NPCQuest : MonoBehaviour
         isQuestNPC = true;
         QuestPopup.SetActive(true);
         MapQuestMark.SetActive(true);
-        //AddQuestUI(); //For test. 나중에 이 부분 지우기.
+        mission = Mission;
     }
 
     public void StartConversation() {
@@ -77,34 +78,45 @@ public class NPCQuest : MonoBehaviour
         QuestPopup.SetActive(false);
         if (isQuestNPC)
         {
-            if (QuestListIndex == -1) {
-                for (int i = 0; i < dialogueList.Dialogues.Count; i++) {
-                    if (dialogueList.Dialogues[i].Day == day) {
-                        Debug.Log("current day for the dialogue is " + dialogueList.Dialogues[i].Day);
-                        QuestListIndex = i;
-                        Debug.Log("QuestListIndex is " + QuestListIndex);
+            if (missionIndex == -1) { //확장 시 미션은 미션매니저쪽에서 랜덤으로 설정되기때문에 여기서 랜덤 안돌려도됨
+                for (int i = 0; i < dialogueList.Missions.Count; i++) {
+                    if (dialogueList.Missions[i].Mission.Equals(mission)) {
+                        missionIndex = i;
                         break;
                     }
                 }
-                if(QuestListIndex == -1)
-                    QuestListIndex = Random.Range(0, dialogueList.Dialogues.Count);
+            }
+            if (DialogueIndex == -1) {
+                for (int i = 0; i < dialogueList.Missions[missionIndex].Dialogue.Count; i++) {
+                    if (dialogueList.Missions[missionIndex].Dialogue[i].Day == day) {
+                        Debug.Log("current day for the dialogue is " + dialogueList.Missions[missionIndex].Dialogue[i].Day);
+                        DialogueIndex = i;
+                        Debug.Log("DialogueIndex is " + DialogueIndex);
+                        break;
+                    }
+                }
+                if (DialogueIndex == -1) {
+                    DialogueIndex = Random.Range(0, dialogueList.Missions[missionIndex].Dialogue.Count);
+                }  
+                    //MyGarden Drought 미션의 index1은 day1 한정 미션이므로 제외되도록 하기
             }
             DialogueCanvas.SetActive(true);
             npcName = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
             LineText = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
             //대화
-            lineTotalCount = dialogueList.Dialogues[QuestListIndex].Lines.Count;
-            LineText.text = dialogueList.Dialogues[QuestListIndex].Lines[currentLineIndex].line;
+            lineTotalCount = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines.Count;
+            LineText.text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines[currentLineIndex].line;
             npcName.text = dialogueList.Name;
         }
         else {
             //일반 대화
             DialogueCanvas.SetActive(true);
-            QuestListIndex = dialogueList.Dialogues.Count - 1;
+            missionIndex = 0;
+            DialogueIndex = 0;
             npcName = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
             LineText = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-            lineTotalCount = dialogueList.Dialogues[QuestListIndex].Lines.Count;
-            LineText.text = dialogueList.Dialogues[QuestListIndex].Lines[currentLineIndex].line;
+            lineTotalCount = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines.Count;
+            LineText.text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines[currentLineIndex].line;
             npcName.text = dialogueList.Name;
         }
     }
@@ -113,7 +125,7 @@ public class NPCQuest : MonoBehaviour
         currentLineIndex++;
         if (currentLineIndex < lineTotalCount)
         {
-            LineText.text = dialogueList.Dialogues[QuestListIndex].Lines[currentLineIndex].line;
+            LineText.text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines[currentLineIndex].line;
         }
         else {
             if (isQuestNPC)
@@ -122,7 +134,7 @@ public class NPCQuest : MonoBehaviour
                 ChoiceUI.SetActive(true);
 
                 ChoiceUILineText = ChoiceUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
-                ChoiceUILineText.text = dialogueList.Dialogues[QuestListIndex].Lines[lineTotalCount - 1].line;
+                ChoiceUILineText.text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines[lineTotalCount - 1].line;
                 acceptButton = ChoiceUI.transform.GetChild(0).gameObject.GetComponent<Button>();
                 rejectButton = ChoiceUI.transform.GetChild(1).gameObject.GetComponent<Button>();
                 acceptButton.onClick.AddListener(() => { AcceptQuest(); });
@@ -165,12 +177,5 @@ public class NPCQuest : MonoBehaviour
      * 수동으로 설정
      * 영역별로 json을 따로 만들어줄거기 때문에 씬에 배치된 npc에 할당된 json에 따라
      * 영역은 알아서 구분될 예정
-     */
-
-    /*
-     * 이대로 하면 NPC한테 다시 말걸었을때 대화가 처음부터 나옴...일상 대화 나오게 할까
-     * NPC마다 변수 넣어주기 번거로움 이거 Start할 떄 미리 찾게 하기
-     * 생각해보니깐 버튼한테 이벤트를 인스펙터에서 주면 안됨... 대화창 켜질때마다
-     * 리스너 추가했다 뺐다 해야될듯?
      */
 }

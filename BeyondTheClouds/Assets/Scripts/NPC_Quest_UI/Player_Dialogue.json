@@ -12,7 +12,16 @@
         },
         {
             "Mission" : "Drought",
-            "Day" : 1,
+            "Day" : -1,
+            "Index" : 2,
+            "Lines" : [
+                { "line" : "테스트 스크립트" }
+            ],
+            "Quest" : ""
+        },
+        {
+            "Mission" : "Overwatering",
+            "Day" : -1,
             "Index" : 1,
             "Lines" : [
                 { "line" : "테스트 스크립트" }
@@ -21,17 +30,8 @@
         },
         {
             "Mission" : "Overwatering",
-            "Day" : 1,
-            "Index" : 1,
-            "Lines" : [
-                { "line" : "테스트 스크립트" }
-            ],
-            "Quest" : ""
-        },
-        {
-            "Mission" : "Overwatering",
-            "Day" : 1,
-            "Index" : 1,
+            "Day" : -1,
+            "Index" : 2,
             "Lines" : [
                 { "line" : "테스트 스크립트" }
             ],

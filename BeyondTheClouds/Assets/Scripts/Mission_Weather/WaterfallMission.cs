@@ -17,7 +17,7 @@ public class WaterfallMission : MissionSettingWithQuest
         CompleteQuestUI();
     }
 
-    public void ChildHeatStrokeSetting() {
-        transform.GetChild(1).GetComponent<HeatStroke>().MakeNPCHeatStroke(_weatherMissionManager);
-    }
+    //public void ChildHeatStrokeSetting() {
+    //    transform.GetChild(1).GetComponent<HeatStroke>().MakeNPCHeatStroke(_weatherMissionManager);
+    //}
 }

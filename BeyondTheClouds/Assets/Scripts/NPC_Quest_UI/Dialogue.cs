@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Dialogue
+public class Missions
 {
     public string Mission;
+    public List<Dialogue> Dialogue;
+}
+
+[System.Serializable]
+public class Dialogue
+{
     public int Day;
     public int Index;
     public List<Line> Lines;
@@ -20,5 +26,7 @@ public class Line {
 [System.Serializable]
 public class DialogueList {
     public string Name;
-    public List<Dialogue> Dialogues;
+    public List<Missions> Missions;
 }
+
+

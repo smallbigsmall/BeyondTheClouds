@@ -6,6 +6,8 @@ public class MyGardenSetting : MissionSettingWithQuest
 {
     private int flowerCount = 0;
     [SerializeField] WeatherMissionManager _weatherMissionManager;
+    private bool alreadyCleared = false;
+    [SerializeField] GameObject Shadow;
 
     public void MyGardenSettingSprout() {
         flowerCount = gameObject.transform.GetChild(0).childCount;
@@ -24,6 +26,9 @@ public class MyGardenSetting : MissionSettingWithQuest
         {
             gameObject.transform.GetChild(0).GetChild(i).gameObject.GetComponent<FlowerSetting>().FlowerColorSetting("#55D9FF", false);
         }
+
+        flowerCount = 0;
+        Shadow.SetActive(true);
     }
 
     public void FlowerSettingYellow()
@@ -39,20 +44,20 @@ public class MyGardenSetting : MissionSettingWithQuest
     public void countFlowerComplete()
     {
         flowerCount -= 1;
-        if (flowerCount == 0)
+        if (flowerCount == 0 && !alreadyCleared)
         {
             //UI 변경
             _weatherMissionManager.MissionComplete();
             CompleteQuestUI();
-            //만들어진 구름 없앨 수 있게 할지 고정시켜놓을지 고민중
-            //만약 없앨 수 있게 할거면 FlowerSetting에 MissionCompleted 변수 만들어서
-            //미션 완료 됐을 경우 색 안바뀌게 해야함
-            //고정시키려면 구름쪽 건드려야함...근데 이게 더 번거로울 듯? 걍 꽃 색
-            //안바뀌게 하는게 나을듯...
+            alreadyCleared = true;
+            for (int i = 0; i < gameObject.transform.GetChild(0).childCount; i++)
+            {
+                transform.GetChild(0).GetChild(i).gameObject.GetComponent<FlowerSetting>().MissionCleared();
+            }
         }
     }
 
-    public void countFlowerDrought()
+    public void countFlowerOverwatering()
     {
         flowerCount += 1;
     }

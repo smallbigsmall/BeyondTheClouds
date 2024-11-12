@@ -12,6 +12,7 @@ public class CropSetting : MonoBehaviour
     private SpriteRenderer cropSpriteRenderer;
     [SerializeField] CropType cropType;
     private int life = 3;
+    private int lifeForShadow = 0;
     private bool isDroughtCrop = false;
     private bool isTodayMission = false;
 
@@ -45,9 +46,10 @@ public class CropSetting : MonoBehaviour
         else {
             if (collision.gameObject.CompareTag("Shadow") && !isDroughtCrop && isTodayMission)
             {
-                ColorUtility.TryParseHtmlString("#FFFFFF", out color); //white
+                if(lifeForShadow == 0) _farmSetting.countCropOverwatering();
+                lifeForShadow++;
+                ColorUtility.TryParseHtmlString("#55D9FF", out color); //blue
                 cropSpriteRenderer.color = color;
-                _farmSetting.countCropComplete();
             }
         }
     }
@@ -56,9 +58,16 @@ public class CropSetting : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Shadow") && !isDroughtCrop && isTodayMission)
         {
-            ColorUtility.TryParseHtmlString("#CF9700", out color); //white
-            cropSpriteRenderer.color = color;
-            _farmSetting.countCropDrought();
+            lifeForShadow--;
+            if (lifeForShadow == 0) {
+                ColorUtility.TryParseHtmlString("#FFFFFF", out color); //white
+                cropSpriteRenderer.color = color;
+                _farmSetting.countCropComplete();
+            }
         }
+    }
+
+    public void MissionCleared() {
+        isTodayMission = false;
     }
 }
