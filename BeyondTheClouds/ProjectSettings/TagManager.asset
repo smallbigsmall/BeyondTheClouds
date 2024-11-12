@@ -12,6 +12,9 @@ TagManager:
   - NightMap
   - NightEnemy
   - Lighting
+  - Portal
+  - Trash
+  - Bin
   layers:
   - Default
   - TransparentFX
