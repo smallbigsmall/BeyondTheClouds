@@ -15,6 +15,11 @@ TagManager:
   - Portal
   - Trash
   - Bin
+  - NPC
+  - QuestUIScrollView
+  - Rain
+  - Shadow
+  - DialogueCanvas
   layers:
   - Default
   - TransparentFX

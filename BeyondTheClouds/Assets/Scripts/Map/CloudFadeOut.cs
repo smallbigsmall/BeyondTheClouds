@@ -18,10 +18,10 @@ public class CloudFadeOut : MonoBehaviour
                 Clouds.transform.GetChild(i).gameObject.SetActive(false);
         }
         
-
-        if (day > 0 && day - 1 < Clouds.transform.childCount) {
-            FadeOutCloud();
-        }
+        //이 부분은 실제맵에서만 작동하게 바꾸기
+        //if (day > 0 && day - 1 < Clouds.transform.childCount) {
+        //    FadeOutCloud();
+        //}
     }
 
     void FadeOutCloud() {
