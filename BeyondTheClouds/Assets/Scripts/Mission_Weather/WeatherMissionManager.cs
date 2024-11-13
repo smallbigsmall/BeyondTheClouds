@@ -57,10 +57,10 @@ public class WeatherMissionManager : MonoBehaviour
 
     [SerializeField] GameObject QuestUIPrefab, QuestScrollView;
 
-    void Start()
-    {
-        StartMissoinSetting(0);
-    }
+    //void Start()
+    //{
+    //    StartMissoinSetting(0);
+    //}
 
     void makeNewDayMission() {
         int day = currentDay;
@@ -74,8 +74,9 @@ public class WeatherMissionManager : MonoBehaviour
         //상황에 따라 새로운 미션 추가되는 날짜만 인스펙터에서 지정하는 것도 고려
     }
 
-    void StartMissoinSetting(int index) { //인스펙터에서 지정시 무조건 랜덤보다 수동으로 지정된 미션이 앞으로 오도록
+    public void StartMissoinSetting(int index, int day) { //인스펙터에서 지정시 무조건 랜덤보다 수동으로 지정된 미션이 앞으로 오도록
         List<MissionInform> todayMission;
+        currentDay = day;
 
         if (currentDay > 7 && index == 0)
         {
@@ -163,7 +164,7 @@ public class WeatherMissionManager : MonoBehaviour
         missionListOfDay[currentDay].missionList[index].Mission_Type = tempType;
 
         if (index == missionListOfDay[currentDay].missionList.Count - 1) {
-            StartMissoinSetting(randomStartIndex);
+            StartMissoinSetting(randomStartIndex, currentDay);
         }
     }
 
@@ -273,11 +274,11 @@ public class WeatherMissionManager : MonoBehaviour
 
         if (NPCobj != null)
         {
-            NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission);
+            NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
         }
         else {//봐서 플레이어용 퀘스트 스크립트 만들 수도 있음
             NPCobj = GameObject.FindWithTag("Player");
-            NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission);
+            NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
         }
     }
 }

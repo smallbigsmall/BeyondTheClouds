@@ -27,6 +27,15 @@ public class MainMapManager : MonoBehaviour
     [SerializeField]
     private Transform confidenceBar;
 
+    [SerializeField]
+    private WeatherMissionManager _weatherMissionManager;
+
+    [SerializeField]
+    private CloudFadeOut _cloudFadeOut;
+
+    [SerializeField]
+    private CloudFadeOut _cloudFadeOutMap;
+
     private List<Dictionary<string, Vector2>> regionList;
     private int currentRegion = -1;
     private float boundOffset = 3.5f;
@@ -66,9 +75,12 @@ public class MainMapManager : MonoBehaviour
             InitializeNighttimeGame();
         }
         else {
-            player.position = new Vector2(-4, -20);
+            player.position = new Vector2(53, -74);
             FindAnyObjectByType<PlayerSkillManager>().gameObject.SetActive(true);
             confidenceBar.gameObject.SetActive(false);
+            _weatherMissionManager.StartMissoinSetting(0, currentPlayerData.stageNum);
+            _cloudFadeOut.initCloud(currentPlayerData.stageNum);
+            _cloudFadeOutMap.initCloud(currentPlayerData.stageNum);
         }
 
     }

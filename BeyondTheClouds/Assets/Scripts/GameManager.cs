@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void LoadMainMap() {
-        SceneManager.LoadScene("PlayerMap");
+        SceneManager.LoadScene("MainMap");
     }
     // Start is called before the first frame update
     void Start()

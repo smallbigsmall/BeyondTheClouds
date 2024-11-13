@@ -6,11 +6,11 @@ using UnityEngine;
 public class Missions
 {
     public string Mission;
-    public List<Dialogue> Dialogue;
+    public List<Dialogue_NPC> Dialogue;
 }
 
 [System.Serializable]
-public class Dialogue
+public class Dialogue_NPC
 {
     public int Day;
     public int Index;
@@ -24,7 +24,7 @@ public class Line {
 }
 
 [System.Serializable]
-public class DialogueList {
+public class DialogueList_NPC {
     public string Name;
     public List<Missions> Missions;
 }

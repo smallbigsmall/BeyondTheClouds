@@ -19,7 +19,7 @@ public class NPCQuest : MonoBehaviour
     private Button acceptButton, rejectButton;
     private string mission = "None";
 
-    DialogueList dialogueList;
+    DialogueList_NPC dialogueList;
     [SerializeField] TextAsset jsonDialogue;
 
     [SerializeField] GameObject MapQuestMark;
@@ -28,7 +28,7 @@ public class NPCQuest : MonoBehaviour
     {
         QuestUIScrollView = GameObject.FindGameObjectWithTag("QuestUIScrollView");
  
-        dialogueList = JsonUtility.FromJson<DialogueList>(jsonDialogue.text);
+        dialogueList = JsonUtility.FromJson<DialogueList_NPC>(jsonDialogue.text);
     }
 
     private void Update()
@@ -65,7 +65,8 @@ public class NPCQuest : MonoBehaviour
         GetComponentInParent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
     }
 
-    public void MakeNPCQuest(string Mission) {
+    public void MakeNPCQuest(string Mission, int day) {
+        this.day = day;
         isQuestNPC = true;
         QuestPopup.SetActive(true);
         MapQuestMark.SetActive(true);

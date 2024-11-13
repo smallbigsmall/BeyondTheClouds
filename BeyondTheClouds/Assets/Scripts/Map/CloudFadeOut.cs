@@ -13,15 +13,21 @@ public class CloudFadeOut : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < day - 1; i++) { //2일차부터 구름 비활성화됨
-            if(i < Clouds.transform.childCount)
-                Clouds.transform.GetChild(i).gameObject.SetActive(false);
-        }
+        
         
         //이 부분은 실제맵에서만 작동하게 바꾸기
         //if (day > 0 && day - 1 < Clouds.transform.childCount) {
         //    FadeOutCloud();
         //}
+    }
+
+    public void initCloud(int day) {
+        this.day = day;
+        for (int i = 0; i < day - 1; i++)
+        { //2일차부터 구름 비활성화됨
+            if (i < Clouds.transform.childCount)
+                Clouds.transform.GetChild(i).gameObject.SetActive(false);
+        }
     }
 
     void FadeOutCloud() {

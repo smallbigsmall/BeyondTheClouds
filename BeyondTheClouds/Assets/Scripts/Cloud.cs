@@ -16,7 +16,7 @@ public class Cloud : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rigidbody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -44,7 +44,7 @@ public class Cloud : MonoBehaviour
     public void SetOwnerController(PlayerMoveController controller) {
         ownerController = controller;
         ownerController.SetOnCloud(true);
-        rigidbody = transform.gameObject.AddComponent<Rigidbody2D>();
+        //rigidbody = transform.gameObject.AddComponent<Rigidbody2D>();
         rigidbody.bodyType = RigidbodyType2D.Kinematic;
     }
 
