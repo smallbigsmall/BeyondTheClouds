@@ -7,9 +7,14 @@ using UnityEngine.UI;
 
 public class MainMapManager : MonoBehaviour
 {
+    [Header("Default Setting")]
     [SerializeField]
-    private GameObject fPlayer, mPlayer;
+    private GameObject fPlayer;
 
+    [SerializeField]
+    private GameObject mPlayer;
+
+    [Header("Night Mission Setting")]
     [SerializeField]
     private List<GameObject> nightEnemyPrefList;
 
@@ -19,11 +24,17 @@ public class MainMapManager : MonoBehaviour
     [SerializeField]
     private Transform gameEndPanel;
 
+    [SerializeField]
+    private Transform confidenceBar;
+
     private List<Dictionary<string, Vector2>> regionList;
     private int currentRegion = -1;
     private float boundOffset = 3.5f;
     private int playerHp = 100;
     private int nightEnemyNum = 1;
+
+    private Image confidenceFilledImg;
+    private TextMeshProUGUI confidencePercent;
 
     PlayerData currentPlayerData;
     // Start is called before the first frame update
@@ -49,11 +60,15 @@ public class MainMapManager : MonoBehaviour
         if (currentPlayerData.dayCleared) { //start nighttime game
             player.position = new Vector2(-20, -80);
             FindAnyObjectByType<PlayerSkillManager>().gameObject.SetActive(false);
+            confidenceBar.gameObject.SetActive(true);
+            confidenceFilledImg = confidenceBar.Find("Fill").GetComponent<Image>();
+            confidencePercent = confidenceBar.Find("Percent").GetComponent<TextMeshProUGUI>();
             InitializeNighttimeGame();
         }
         else {
             player.position = new Vector2(-4, -20);
             FindAnyObjectByType<PlayerSkillManager>().gameObject.SetActive(true);
+            confidenceBar.gameObject.SetActive(false);
         }
 
     }
@@ -131,7 +146,8 @@ public class MainMapManager : MonoBehaviour
 
     public void DecreasePlayerHp(int amount) {
         playerHp -= amount;
-
+        confidenceFilledImg.fillAmount = (float)playerHp / 100;
+        confidencePercent.text = playerHp + "%";
         if (playerHp <= 0) {
             playerHp = 0;
             //Show pop-up
