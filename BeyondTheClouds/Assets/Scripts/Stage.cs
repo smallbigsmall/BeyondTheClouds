@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Stage : MonoBehaviour
 {
     int stageNum;
+    int totalStageCount;
     bool dayCleared;
     bool nightCleared;
 
@@ -18,6 +19,8 @@ public class Stage : MonoBehaviour
         _stageManager = FindAnyObjectByType<StageManager>();
         myBtn = GetComponent<Button>();
         myBtn.onClick.AddListener(OnStageButtonClicked);
+
+        totalStageCount = _stageManager.GetTotalStageCount();
     }
 
     // Update is called once per frame
@@ -30,9 +33,11 @@ public class Stage : MonoBehaviour
         _stageManager.SetSelectedStage(stageNum);
         Debug.Log("Stage Button Clicked: " + stageNum);
 
-        //daytime clear? -> show pop-up
-        if (dayCleared) {
-            _stageManager.ActivatePopUp();
+        if(stageNum > totalStageCount) { // plus game
+            _stageManager.ActivatePopUp(false);
+        }
+        else if (stageNum <= totalStageCount && dayCleared) {
+            _stageManager.ActivatePopUp(true);
         }
         else {
             Debug.Log($"Play {stageNum} day game");

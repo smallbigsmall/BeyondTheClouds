@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         playerData = new PlayerData();
     }
 
-    public void OnClickStartBtn() {
+    public void LoadMainMenu() {
         SceneManager.LoadScene("MainMenu");
     }
 

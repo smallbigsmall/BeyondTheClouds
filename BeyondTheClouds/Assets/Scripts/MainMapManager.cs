@@ -78,15 +78,15 @@ public class MainMapManager : MonoBehaviour
             player.position = new Vector2(53, -74);
             FindAnyObjectByType<PlayerSkillManager>().gameObject.SetActive(true);
             confidenceBar.gameObject.SetActive(false);
-            _weatherMissionManager.StartMissoinSetting(0, currentPlayerData.stageNum);
-            _cloudFadeOut.initCloud(currentPlayerData.stageNum);
-            _cloudFadeOutMap.initCloud(currentPlayerData.stageNum);
+            InitializeDatetimeGame();          
         }
 
     }
 
     private void InitializeDatetimeGame() {
-
+        _weatherMissionManager.StartMissoinSetting(0, currentPlayerData.stageNum);
+        _cloudFadeOut.initCloud(currentPlayerData.stageNum);
+        _cloudFadeOutMap.initCloud(currentPlayerData.stageNum);
     }
 
     private void InitializeNighttimeGame() {

@@ -26,6 +26,11 @@ public class PlayerDataManager : MonoBehaviour
 
 
     public void SavePlayerData() {
+        PlayerData currentData = GameManager.Instance.GetCurrentPlayerData();
+        if (currentData.stageNum > playerData.stageNum || 
+            (currentData.stageNum == playerData.stageNum && currentData.dayCleared != playerData.dayCleared)) {
+            UpdatePlayerData(currentData.stageNum, currentData.dayCleared);
+        }
         string write_str = JsonUtility.ToJson(playerData);
         File.WriteAllText(filePath, write_str);
         Debug.Log($"Save Player Data in {filePath}");
@@ -69,7 +74,7 @@ public class PlayerDataManager : MonoBehaviour
     private void OnApplicationQuit() {
         //for testing
         playerData.gender = 'm';
-        playerData.stageNum = 3;
+        playerData.stageNum = 7;
         playerData.dayCleared = false;
 
         SavePlayerData();

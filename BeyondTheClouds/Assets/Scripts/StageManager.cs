@@ -10,7 +10,6 @@ public class StageManager : MonoBehaviour
     // Start is called before the first frame update
     private int selectedStage = 0;
     private int totalStageCount = 6;
-    private bool dayCleared = false;
     private PlayerData playerData;
     private Button yesBtn, noBtn;
 
@@ -41,6 +40,7 @@ public class StageManager : MonoBehaviour
         }
 
         if (playerData.stageNum < totalStageCount) endingBtn.GetComponent<Button>().interactable = false;
+        else if (playerData.stageNum > totalStageCount) InitializePlusStage();
     }
 
     // Update is called once per frame
@@ -85,34 +85,70 @@ public class StageManager : MonoBehaviour
 
     }
 
+    private void InitializePlusStage() {
+        GameObject stageBtn = Instantiate(stageButtonPref);
+        stageBtn.transform.SetParent(stageListUI, true);
+        //stageBtn.transform.SetSiblingIndex(totalStageCount+1);
+        stageBtn.transform.localScale = new Vector3(1, 1, 1);
+        stageBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Plus Stage";
+        stageBtn.transform.GetChild(1).gameObject.SetActive(false);
+
+        Stage initialStage = stageBtn.transform.GetComponent<Stage>();
+        initialStage.SetStageNum(totalStageCount + 1);
+    }
+
     public void OnPrologueButtonClicked() {
         selectedStage = 0;
         if (playerData.stageNum > 0 || (playerData.stageNum == 0 &&playerData.dayCleared)) {
             popUpUI.SetActive(true);
             popUpUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text 
                 = "프롤로그 스토리를 본 적이 있습니다.\n다시 보시겠습니까?";
+        }else if(playerData.stageNum == 0 && !playerData.dayCleared) {
+            SceneManager.LoadScene("Prologue");
         }
     }
 
     public void OnEndingButtonClicked() {
         selectedStage = totalStageCount;
+
+        if (playerData.stageNum > totalStageCount || (playerData.stageNum == totalStageCount && playerData.dayCleared)) {
+            popUpUI.SetActive(true);
+            popUpUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text
+                = "Day time 게임을 이미 클리어했습니다.\n다시 Day time부터 플레이하시겠습니까?";
+        }else if(playerData.stageNum == totalStageCount && playerData.dayCleared) {
+            SceneManager.LoadScene("MainMap");
+        }
     }
 
-    public void ActivatePopUp() { // In stage, day time clear
-        popUpUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text
+    public void ActivatePopUp(bool isDefaultGame) { // In stage, day time clear
+        if (isDefaultGame) {
+            popUpUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text
                 = "Day time 게임을 이미 클리어했습니다.\n다시 Day time부터 플레이하시겠습니까?";
+        }
+        else {
+            popUpUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text
+                = "Day time과 Night time 중\n어느 게임을 플레이하시겠습니까?";
+            // yes -> day , no -> night
+            popUpUI.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Day";
+            popUpUI.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Night";
+        }
+        
         popUpUI.SetActive(true);
     }
 
     private void OnYesButtonClicked() {
         if(selectedStage == 0) {  //prologue
-            Debug.Log("Load prologue story cut scene");
+            SceneManager.LoadScene("Prologue");
+            return;
         }
-        else if(selectedStage < totalStageCount){ //stage
+        else if(selectedStage <= totalStageCount){ //stage
             // Daytime play again?
             Debug.Log($"Play {selectedStage} day game");
         }
-        GameManager.Instance.SetCurrentPlayerData(selectedStage, false);
+        else { //extended map
+
+        }
+        GameManager.Instance.SetCurrentPlayerData(selectedStage, false); 
         GameManager.Instance.LoadMainMap();
         popUpUI.SetActive(false);
     }
@@ -126,6 +162,10 @@ public class StageManager : MonoBehaviour
             // Daytime play again?
             Debug.Log($"Play {selectedStage} night game");           
         }
+        else if(selectedStage == totalStageCount) { //ending
+            SceneManager.LoadScene("Ending");
+            return;
+        }
 
         GameManager.Instance.SetCurrentPlayerData(selectedStage, true);
         GameManager.Instance.LoadMainMap();
@@ -136,5 +176,9 @@ public class StageManager : MonoBehaviour
         if(stage>0 && stage< totalStageCount) {
             selectedStage = stage;
         }
+    }
+
+    public int GetTotalStageCount() {
+        return totalStageCount;
     }
 }

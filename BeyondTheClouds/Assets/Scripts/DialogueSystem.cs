@@ -4,6 +4,7 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Dialogue {
@@ -21,19 +22,23 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI dialogueText;
     [SerializeField]
-    private GameObject nextBtn;
+    private GameObject nextBtn, endPanel;
     private DialogueList totalDialogue = new DialogueList();
     private List<Dialogue> dialogueList;
     private int index = 0;
     private float delay = 0.1f;
     private bool onePartFinished;
+    private bool isPrologue;
     void Start()
     {
         TextAsset textAsset = null;
         if(SceneManager.GetActiveScene().name == "Prologue") {
-            textAsset = Resources.Load<TextAsset>("Prologue.json");
-        }else if(SceneManager.GetActiveScene().name == "Ending") {
+            textAsset = Resources.Load<TextAsset>("Prologue");
+            isPrologue = true;
+        }
+        else if(SceneManager.GetActiveScene().name == "Ending") {
             textAsset = Resources.Load<TextAsset>("Ending");
+            isPrologue = false;
         }
         totalDialogue = JsonUtility.FromJson<DialogueList>(textAsset.ToString());
         dialogueList = totalDialogue.dialogues;
@@ -58,9 +63,24 @@ public class DialogueSystem : MonoBehaviour
         }
         else {
             Debug.Log("Prologue end");
-            //GameManager.Instance.SetCurrentPlayerData(0, true);
-            //SceneManager.LoadScene("MainMap");
+            EndDialogueSetting();           
         }
+    }
+
+    private void EndDialogueSetting() {
+        if (isPrologue) GameManager.Instance.SetCurrentPlayerData(0, true);
+        else
+            GameManager.Instance.SetCurrentPlayerData(
+                GameManager.Instance.GetCurrentPlayerData().stageNum + 1, false);
+        dialogueText.transform.parent.gameObject.SetActive(false);
+        endPanel.SetActive(true);
+
+        endPanel.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() => {
+            GameManager.Instance.LoadMainMap();
+        });
+        endPanel.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => {
+            GameManager.Instance.LoadMainMenu();
+        });
     }
 
     public void OnClickNextBtn() {
