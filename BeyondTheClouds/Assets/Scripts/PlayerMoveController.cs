@@ -9,7 +9,7 @@ public class PlayerMoveController : MonoBehaviour
     private float collisitionOffset = 0.05f;
     private Vector2 movement;
     private new Rigidbody2D rigidbody;
-    private Collider2D collider;
+    private new Collider2D collider;
     private ContactFilter2D movementFilter;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -17,13 +17,14 @@ public class PlayerMoveController : MonoBehaviour
     private bool isWalking, onCloud;
     private bool isNight;
     private Vacuum vacuum = null;
+    private Transform playerWand;
 
     private MainMapManager mainMapManager;
 
     List<RaycastHit2D> castColisitions = new List<RaycastHit2D>();
 
     [SerializeField]
-    private GameObject wind_projectile;
+    private GameObject wind_projectile, wand;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +35,12 @@ public class PlayerMoveController : MonoBehaviour
         mainMapManager = FindAnyObjectByType<MainMapManager>();
 
         isNight = GameManager.Instance.GetCurrentPlayerData().dayCleared;
-        if(transform.childCount > 0) {
+        if (isNight) {
+            playerWand = Instantiate(wand, transform).transform;
+            playerWand.GetComponent<SpriteRenderer>().flipX = true;
+            playerWand.localPosition = new Vector2(-0.57f, -0.39f);
+        }
+        else if(!isNight && transform.childCount > 0) {
             vacuum = transform.GetChild(0).GetComponent<Vacuum>();
         }
     }
@@ -68,8 +74,22 @@ public class PlayerMoveController : MonoBehaviour
             animator.SetFloat("XDir", movement.x);
             animator.SetFloat("YDir", movement.y);
 
-            if(vacuum != null) {
+            if(!isNight && vacuum != null) {
                 vacuum.FlipVacuum(movement.x < 0);
+            }
+
+            if(isNight && playerWand != null) {
+                if(movement.x > 0) { // ->
+                    playerWand.GetComponent<SpriteRenderer>().flipX = false;
+                    playerWand.localPosition = new Vector2(0.22f, -0.5f);
+                }else if(movement.x < 0) {
+                    playerWand.GetComponent<SpriteRenderer>().flipX = true;
+                    playerWand.localPosition = new Vector2(-0.3f, -0.42f);
+                }
+                else {
+                    playerWand.GetComponent<SpriteRenderer>().flipX = true;
+                    playerWand.localPosition = new Vector2(-0.57f, -0.39f);
+                }
             }
         }
         else {
@@ -117,7 +137,8 @@ public class PlayerMoveController : MonoBehaviour
        
         if (context.phase == InputActionPhase.Started) {
             if (isNight) {
-                Vector3 initPos = transform.position;
+                Vector3 initPos =playerWand!=null? playerWand.GetChild(0).position:
+                    transform.position;
                 GameObject wind = Instantiate(wind_projectile, initPos, Quaternion.identity);
                 wind.GetComponent<WindProjectile>().ShootWind(new Vector2(animator.GetFloat("XDir"), animator.GetFloat("YDir")));
             }

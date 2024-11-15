@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wind_projectile: {fileID: 2122849804754850108, guid: 4b693e02e9d17144fa98bbe3da4ab68e, type: 3}
+  wand: {fileID: 150211919189168156, guid: af5e98b1dad43734e8952f3641069c01, type: 3}
 --- !u!50 &1706180458595890537
 Rigidbody2D:
   serializedVersion: 4

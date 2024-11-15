@@ -86,7 +86,7 @@ public class NightEnemy : MonoBehaviour
 
         playerDistance = Vector2.Distance(transform.position, targetPlayer.position);
 
-        if(playerDistance <= 8f && wandering) {
+        if(playerDistance <= 8f && wandering && outside) {
             Debug.Log($"{transform.name}: Stop wandering");
             wandering = false;
             currentPos = transform.position;
@@ -97,7 +97,8 @@ public class NightEnemy : MonoBehaviour
         }
 
         if (wandering) {
-            if (Vector2.Distance(targetPosition, transform.position) <= 0.5f) {
+            if (Vector2.Distance(targetPosition, transform.position) <= 0.2f) {
+                if (!outside) outside = true;
                 isArrive = true;
                 FindNextRegion();
             }
@@ -117,7 +118,6 @@ public class NightEnemy : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision) {
         if (!wandering && collision.CompareTag("NightMap")) {
-            Debug.Log((targetPlayer.position - transform.position).normalized);
             outside = false;
             attackPlayerRoutine = StartCoroutine(AttackPlayer());
         }else if (wandering) {
@@ -128,29 +128,17 @@ public class NightEnemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) {
-        if (collision.CompareTag("NightMap")) {
-            outside = true;
-        }
-    }
-
     private void ReturnToOutside() {
-        Vector2 currentPos = transform.position;
-        if(currentPos.x > -14 && currentPos.y > -81) {
-            currentRegion = 0;
-        }else if(currentPos.x<-14 && currentPos.y > -81) {
-            currentRegion = 1;
-        }else if(currentPos.x < -14 && currentPos.y < -81) {
-            currentRegion = 2;
-        }else if(currentPos.x>-14 && currentPos.y < -81) {
-            currentRegion = 3;
+        for (int i = 0; i < 4; i++) {
+            if (currentPos.x >= regionList[i]["minBound"].x && currentPos.x <= regionList[i]["maxBound"].x &&
+                currentPos.y >= regionList[i]["minBound"].y && currentPos.y <= regionList[i]["maxBound"].y) {
+                Debug.Log(gameObject.name + ": " + currentRegion);
+                currentRegion = i;
+                break;
+            }
         }
-        Vector2 minBound = regionList[currentRegion]["minBound"];
-        Vector2 maxBound = regionList[currentRegion]["maxBound"];
 
-        float xPos = Random.Range(minBound.x, maxBound.x);
-        float yPos = Random.Range(minBound.y, maxBound.y);
-        targetPosition = new Vector2(xPos, yPos);
+        targetPosition = currentPos;
 
         isArrive = false;
     }
@@ -160,7 +148,6 @@ public class NightEnemy : MonoBehaviour
         while (!wandering) {
             yield return new WaitForSeconds(1f);
 
-            Debug.Log("Attack player");
             GameObject attackLight = Instantiate(lightAttackObj, new Vector2(targetPlayer.position.x, targetPlayer.position.y + 2), Quaternion.identity);
 
             yield return new WaitForSeconds(0.8f);

@@ -12,6 +12,10 @@ public class CameraController : MonoBehaviour
 
     private void Start() {
         StartCoroutine(FindPlayer());
+
+        if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
+            transform.GetComponent<Camera>().orthographicSize = 8f;
+        }
     }
     private void FixedUpdate() {
         if (!playerLoaded) return;

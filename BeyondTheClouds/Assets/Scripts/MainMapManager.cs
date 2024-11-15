@@ -162,10 +162,10 @@ public class MainMapManager : MonoBehaviour
 
     public void DecreasePlayerHp(int amount) {
         playerHp -= amount;
-        confidenceFilledImg.fillAmount = (float)playerHp / 100;
-        confidencePercent.text = playerHp + "%";
+        confidenceFilledImg.fillAmount = (float)playerHp / 100;      
         if (playerHp <= 0) {
             playerHp = 0;
+            confidencePercent.text = playerHp + "%";
             //Show pop-up
             Debug.Log($"Day {currentPlayerData.stageNum} Night game over");
 
