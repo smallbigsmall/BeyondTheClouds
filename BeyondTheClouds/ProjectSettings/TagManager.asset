@@ -20,6 +20,8 @@ TagManager:
   - Rain
   - Shadow
   - DialogueCanvas
+  - GardenDoor
+  - HouseDoor
   layers:
   - Default
   - TransparentFX

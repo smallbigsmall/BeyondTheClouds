@@ -15,12 +15,8 @@ public class Vacuum : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        /*if (Input.GetKeyDown(KeyCode.Space) && binEntered && roomCleaner.GetAllCleaned()) {
-            Debug.Log("First Day Mission Clear");
-        }*/
+    public void FlipVacuum(bool flipX) {
+        spriteRenderer.flipX = flipX;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
@@ -38,5 +34,9 @@ public class Vacuum : MonoBehaviour
         if (collision.CompareTag("Bin")) {
             binEntered = false;
         }
+    }
+
+    public bool IsFinishingCleaningReady() {
+        return roomCleaner.GetAllCleaned() && binEntered;
     }
 }

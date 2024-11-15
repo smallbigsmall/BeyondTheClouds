@@ -57,6 +57,7 @@ public class WeatherMissionManager : MonoBehaviour
 
     [SerializeField] GameObject QuestUIPrefab, QuestScrollView;
 
+
     //void Start()
     //{
     //    StartMissoinSetting(0);
@@ -246,6 +247,9 @@ public class WeatherMissionManager : MonoBehaviour
     void Cleaning(MissionLocation ML, MissionType MT) {
         if (ML == MissionLocation.myGarden) {
             //Cleaning 미션 초기화되는 부분 찾아서 넣기
+            RoomCleaner roomCleaner = FindAnyObjectByType<RoomCleaner>();
+            roomCleaner.InitializeRoomCleanMission();
+
             CallChildQuestMethod(MyGarden, MissionType.Cleaning.ToString());
         }
     }

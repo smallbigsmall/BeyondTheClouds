@@ -10,12 +10,28 @@ public class RoomCleaner : MonoBehaviour
     [SerializeField]
     private Transform trashParent, trashZone;
 
+    [SerializeField]
+    private GameObject portal, vacuum;  
+
     private int totalTrashNum;
     private bool allCleaned;
+    private GameObject playerVacuum;
+    private Transform player;
+
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.FindWithTag("Player").transform;
+    }
+
+    public void InitializeRoomCleanMission() {
+        portal.SetActive(false);
+
         totalTrashNum = trashParent.childCount;
+
+        foreach(GameObject trash in trashParent) {
+            trash.SetActive(true);
+        }
 
         int additionalTrashNum = Random.Range(5, 9);
         Vector2 minPos = trashZone.GetChild(1).position;
@@ -24,13 +40,16 @@ public class RoomCleaner : MonoBehaviour
         totalTrashNum += additionalTrashNum;
 
         int trashObjectsCount = trashObjects.Count;
-        for (int i=0; i< additionalTrashNum; i++) {
+        for (int i = 0; i < additionalTrashNum; i++) {
             int randObjIdx = Random.Range(0, trashObjectsCount);
             float randPosX = Random.Range(minPos.x, maxPos.x);
             float randPosY = Random.Range(minPos.y, maxPos.y);
             GameObject trash = Instantiate(trashObjects[randObjIdx], new Vector3(randPosX, randPosY), Quaternion.identity);
             trash.transform.SetParent(trashParent);
         }
+
+        playerVacuum = Instantiate(vacuum, player);
+        playerVacuum.transform.localPosition = new Vector2(-0.16f, -1f);
     }
 
     public void RemoveTrash() {
@@ -45,9 +64,9 @@ public class RoomCleaner : MonoBehaviour
     public bool GetAllCleaned() {
         return allCleaned;
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
+    
+    public void FinishCleaning() {
+        if(playerVacuum != null) Destroy(playerVacuum);
+        portal.SetActive(true);
     }
 }

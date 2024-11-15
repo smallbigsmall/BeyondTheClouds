@@ -15,6 +15,8 @@ public class PlayerMoveController : MonoBehaviour
     private Animator animator;
     public bool isMoving { get; private set; }
     private bool isWalking, onCloud;
+    private bool isNight;
+    private Vacuum vacuum = null;
 
     private MainMapManager mainMapManager;
 
@@ -30,6 +32,11 @@ public class PlayerMoveController : MonoBehaviour
         animator = GetComponent<Animator>();
         collider = GetComponent<Collider2D>();
         mainMapManager = FindAnyObjectByType<MainMapManager>();
+
+        isNight = GameManager.Instance.GetCurrentPlayerData().dayCleared;
+        if(transform.childCount > 0) {
+            vacuum = transform.GetChild(0).GetComponent<Vacuum>();
+        }
     }
 
     // Update is called once per frame
@@ -61,6 +68,9 @@ public class PlayerMoveController : MonoBehaviour
             animator.SetFloat("XDir", movement.x);
             animator.SetFloat("YDir", movement.y);
 
+            if(vacuum != null) {
+                vacuum.FlipVacuum(movement.x < 0);
+            }
         }
         else {
             animator.SetBool("IsWalking", false);
@@ -92,16 +102,33 @@ public class PlayerMoveController : MonoBehaviour
         if (collision.CompareTag("Lighting")) {
             mainMapManager.DecreasePlayerHp(5);
         }
+        else if (collision.CompareTag("HouseDoor")) {
+            transform.position = new Vector2(2.7f, 0.4f);
+        }
+        else if (collision.CompareTag("GardenDoor")) {
+            transform.position = new Vector2(52.5f, -78.3f);
+        }
+        else if (collision.CompareTag("Portal")) {
+            transform.position = new Vector2(-3.5f,-20f);
+        }
     }
 
     public void OnPlayerAttack(InputAction.CallbackContext context) {
-        if (!GameManager.Instance.GetCurrentPlayerData().dayCleared) return;
+       
+        if (context.phase == InputActionPhase.Started) {
+            if (isNight) {
+                Vector3 initPos = transform.position;
+                GameObject wind = Instantiate(wind_projectile, initPos, Quaternion.identity);
+                wind.GetComponent<WindProjectile>().ShootWind(new Vector2(animator.GetFloat("XDir"), animator.GetFloat("YDir")));
+            }
+            else {
+                if (vacuum == null) return;
 
-        //night time
-        if(context.phase == InputActionPhase.Started) {
-            Vector3 initPos = transform.position;
-            GameObject wind = Instantiate(wind_projectile, initPos, Quaternion.identity);
-            wind.GetComponent<WindProjectile>().ShootWind(new Vector2(animator.GetFloat("XDir"), animator.GetFloat("YDir")));
+                if (vacuum.IsFinishingCleaningReady()) { //mission clear
+                    mainMapManager.CleaningMissionFinished();
+                }
+            }
+            
         }
         
     }

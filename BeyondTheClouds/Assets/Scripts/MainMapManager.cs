@@ -27,6 +27,7 @@ public class MainMapManager : MonoBehaviour
     [SerializeField]
     private Transform confidenceBar;
 
+    [Header("Day Mission Setting")]
     [SerializeField]
     private WeatherMissionManager _weatherMissionManager;
 
@@ -35,6 +36,9 @@ public class MainMapManager : MonoBehaviour
 
     [SerializeField]
     private CloudFadeOut _cloudFadeOutMap;
+
+    [SerializeField]
+    private RoomCleaner roomCleaner;
 
     private List<Dictionary<string, Vector2>> regionList;
     private int currentRegion = -1;
@@ -204,6 +208,11 @@ public class MainMapManager : MonoBehaviour
 
     private void GoToMainMenu() {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void CleaningMissionFinished() {
+        Debug.Log("Cleaning Mission finished");
+        roomCleaner.FinishCleaning();
     }
 
     void Start()
