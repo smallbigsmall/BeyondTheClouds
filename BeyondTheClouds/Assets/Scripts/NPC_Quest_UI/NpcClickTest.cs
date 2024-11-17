@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class NpcClickTest : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] GameObject DialogueCanvas, ChoiceUI;
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) {
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
 
-            if (hit.collider.CompareTag("NPC")) {
+            if (hit.collider != null && (hit.collider.CompareTag("NPC") || hit.collider.CompareTag("PlayerDialogueCollider"))) {
+                if (hit.collider.CompareTag("PlayerDialogueCollider")) {
+                    hit.collider.GetComponent<NPCQuest>().SetIsPlayerTrue();
+                }
+                hit.collider.GetComponent<NPCQuest>().SetDialogueUI(DialogueCanvas, ChoiceUI);
                 hit.collider.GetComponent<NPCQuest>().StartConversation();
             }
         }

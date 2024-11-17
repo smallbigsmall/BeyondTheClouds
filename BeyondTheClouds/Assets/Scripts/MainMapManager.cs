@@ -36,6 +36,9 @@ public class MainMapManager : MonoBehaviour
     [SerializeField]
     private CloudFadeOut _cloudFadeOutMap;
 
+    [SerializeField]
+    private GameObject MyGardenQuestMark;
+
     private List<Dictionary<string, Vector2>> regionList;
     private int currentRegion = -1;
     private float boundOffset = 3.5f;
@@ -65,6 +68,8 @@ public class MainMapManager : MonoBehaviour
         else {
             player = Instantiate(mPlayer).transform;
         }
+
+        player.transform.GetChild(1).GetComponent<NPCQuest>().MapQuestMark = MyGardenQuestMark;
 
         if (currentPlayerData.dayCleared) { //start nighttime game
             player.position = new Vector2(-20, -80);

@@ -11,18 +11,23 @@ public class NPCQuest : MonoBehaviour
     private bool isQuestNPC = false;
     [SerializeField] GameObject QuestPopup;
     private GameObject newQuest;
-    public GameObject DialogueCanvas, ChoiceUI;
+    private GameObject DialogueCanvas, ChoiceUI;
     private TextMeshProUGUI LineText, npcName, ChoiceUILineText;
-    public int day; //For test
+    private int day;
     private int DialogueIndex = -1, lineTotalCount = 0, currentLineIndex = 0, missionIndex = -1;
-    private bool canChangeLine = false, isQuestAccepted = false;
+    private bool canChangeLine = false, isQuestAccepted = false, isPlayer = false;
     private Button acceptButton, rejectButton;
     private string mission = "None";
+    private string playerAccept = "좋아. 내가 해결해보자!";
+    private string playerReject = "아니야. 아직 더 고민해볼래.";
+    private string NPCAccept = "알았어. 내가 도와줄게!";
+    private string NPCReject = "미안해. 생각을 좀 해볼게.";
+    private Image portraitImage;
 
     DialogueList_NPC dialogueList;
     [SerializeField] TextAsset jsonDialogue;
 
-    [SerializeField] GameObject MapQuestMark;
+    public GameObject MapQuestMark;
 
     void Start()
     {
@@ -49,6 +54,13 @@ public class NPCQuest : MonoBehaviour
                     acceptButton.onClick.RemoveListener(() => { AcceptQuest(); });
                     rejectButton.onClick.RemoveListener(() => { RejectQuest(); });
                     DialogueIndex = 0; //임의 설정. 일상 대화가 있는 index로 설정해주는 부분
+                    if (day == 1 && mission.Equals("Cleaning")) {
+                        DialogueIndex = -1;
+                        lineTotalCount = 0;
+                        currentLineIndex = 0;
+                        missionIndex = -1;
+                        FindAnyObjectByType<WeatherMissionManager>().CallMyGardenQuestMethod();
+                    }
                 }
             }
             else {
@@ -61,8 +73,16 @@ public class NPCQuest : MonoBehaviour
         newQuest = Instantiate(QuestUI);
         newQuest.transform.SetParent(QuestUIScrollView.transform);
         newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Quest;
-        GetComponentInParent<MissionSettingWithQuest>().QuestUI = newQuest;
-        GetComponentInParent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
+        if (!isPlayer)
+        {
+            GetComponentInParent<MissionSettingWithQuest>().QuestUI = newQuest;
+            GetComponentInParent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
+        }
+        else {
+            GameObject myGarden = GameObject.FindWithTag("MyGarden");
+            myGarden.GetComponent<MissionSettingWithQuest>().QuestUI = newQuest;
+            myGarden.GetComponent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
+        }
     }
 
     public void MakeNPCQuest(string Mission, int day) {
@@ -71,14 +91,17 @@ public class NPCQuest : MonoBehaviour
         QuestPopup.SetActive(true);
         MapQuestMark.SetActive(true);
         mission = Mission;
+        isQuestAccepted = false;
     }
 
     public void StartConversation() {
         canChangeLine = true;
         currentLineIndex = 0;
         QuestPopup.SetActive(false);
+        
         if (isQuestNPC)
         {
+            
             if (missionIndex == -1) { //확장 시 미션은 미션매니저쪽에서 랜덤으로 설정되기때문에 여기서 랜덤 안돌려도됨
                 for (int i = 0; i < dialogueList.Missions.Count; i++) {
                     if (dialogueList.Missions[i].Mission.Equals(mission)) {
@@ -97,28 +120,47 @@ public class NPCQuest : MonoBehaviour
                     }
                 }
                 if (DialogueIndex == -1) {
-                    DialogueIndex = Random.Range(0, dialogueList.Missions[missionIndex].Dialogue.Count);
+                    if (dialogueList.Missions[missionIndex].Mission == "Drought" && isPlayer)
+                    {
+                        //MyGarden Drought 미션의 index1은 day1 한정 미션이므로 제외되도록 하기
+                        DialogueIndex = Random.Range(1, dialogueList.Missions[missionIndex].Dialogue.Count);
+                    }
+                    else {
+                        DialogueIndex = Random.Range(0, dialogueList.Missions[missionIndex].Dialogue.Count);
+                    }
                 }  
-                    //MyGarden Drought 미션의 index1은 day1 한정 미션이므로 제외되도록 하기
             }
-            DialogueCanvas.SetActive(true);
-            npcName = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-            LineText = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-            //대화
-            lineTotalCount = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines.Count;
-            LineText.text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines[currentLineIndex].line;
-            npcName.text = dialogueList.Name;
         }
         else {
             //일반 대화
-            DialogueCanvas.SetActive(true);
+            if (isPlayer) return;
             missionIndex = 0;
             DialogueIndex = 0;
-            npcName = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-            LineText = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-            lineTotalCount = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines.Count;
-            LineText.text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines[currentLineIndex].line;
-            npcName.text = dialogueList.Name;
+        }
+
+        DialogueCanvas.SetActive(true);
+        npcName = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+        LineText = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+        portraitImage = DialogueCanvas.transform.GetChild(0).GetChild(0).GetChild(2).gameObject.GetComponent<Image>();
+
+        lineTotalCount = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines.Count;
+        LineText.text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Lines[currentLineIndex].line;
+        npcName.text = dialogueList.Name;
+
+        switch (gameObject.name)
+        {
+            case "DialogueCollider":
+                if(gameObject.transform.parent.gameObject.name.Equals("MPlayer(Clone)")) 
+                    portraitImage.sprite = Resources.Load<Sprite>("Portrait/Portrait_Alex");
+                else if(gameObject.transform.parent.gameObject.name.Equals("FPlayer(Clone)"))
+                    portraitImage.sprite = Resources.Load<Sprite>("Portrait/Portrait_Amelia");
+                break;
+            case "NPC_Adam":
+                portraitImage.sprite = Resources.Load<Sprite>("Portrait/Portrait_Adam");
+                break;
+            case "NPC_Bob":
+                portraitImage.sprite = Resources.Load<Sprite>("Portrait/Portrait_Bob");
+                break;
         }
     }
 
@@ -140,6 +182,15 @@ public class NPCQuest : MonoBehaviour
                 rejectButton = ChoiceUI.transform.GetChild(1).gameObject.GetComponent<Button>();
                 acceptButton.onClick.AddListener(() => { AcceptQuest(); });
                 rejectButton.onClick.AddListener(() => { RejectQuest(); });
+                if (isPlayer)
+                {
+                    ChoiceUI.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = playerAccept;
+                    ChoiceUI.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = playerReject;
+                }
+                else {
+                    ChoiceUI.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = NPCAccept;
+                    ChoiceUI.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = NPCReject;
+                }
             }
             else {
                 DialogueCanvas.SetActive(false);
@@ -152,13 +203,28 @@ public class NPCQuest : MonoBehaviour
         canChangeLine = true;
         isQuestAccepted = true;
         ChoiceUI.SetActive(false);
-        LineText.text = "감사합니다!";
+        if (gameObject.CompareTag("NPC"))
+        {
+            LineText.text = "감사합니다!";
+        }
+        else {
+            LineText.text = "잘 할 수 있을거야!";
+        }
     }
 
     public void RejectQuest() {
         ChoiceUI.SetActive(false);
         DialogueCanvas.SetActive(false);
         QuestPopup.SetActive(true);
+    }
+
+    public void SetDialogueUI(GameObject DialogueCanvas, GameObject ChoiceUI) {
+        this.DialogueCanvas = DialogueCanvas;
+        this.ChoiceUI = ChoiceUI;
+    }
+
+    public void SetIsPlayerTrue() {
+        isPlayer = true;
     }
 
     /*

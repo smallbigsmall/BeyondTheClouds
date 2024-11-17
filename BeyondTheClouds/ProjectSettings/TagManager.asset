@@ -20,6 +20,8 @@ TagManager:
   - Rain
   - Shadow
   - DialogueCanvas
+  - MyGarden
+  - PlayerDialogueCollider
   layers:
   - Default
   - TransparentFX

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomCleaner : MonoBehaviour
+public class RoomCleaner : MissionSettingWithQuest
 {
     [SerializeField]
     private List<GameObject> trashObjects;
@@ -12,6 +12,9 @@ public class RoomCleaner : MonoBehaviour
 
     private int totalTrashNum;
     private bool allCleaned;
+
+    [SerializeField] WeatherMissionManager _weatherMissionManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +42,8 @@ public class RoomCleaner : MonoBehaviour
         if(totalTrashNum == 0) {
             allCleaned = true;
             Debug.Log("All trash removed");
+            _weatherMissionManager.MissionComplete();
+            CompleteQuestUI();
         }
     }
 

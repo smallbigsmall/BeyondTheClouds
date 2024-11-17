@@ -48,10 +48,10 @@ public class WeatherMissionManager : MonoBehaviour
         }
     }
 
-    public int currentDay = 0; //for test
+    private int currentDay = 0, acceptedQuest = 0;
     public List<MissionListOfDay> missionListOfDay = new List<MissionListOfDay>(); //모든 day의 미션
 
-    [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine;
+    [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine, MyHouse;
 
     private int todayMissionCount = -1, randomStartIndex = -1;
 
@@ -186,6 +186,7 @@ public class WeatherMissionManager : MonoBehaviour
             } 
             else{
                 MyGarden.GetComponent<MyGardenSetting>().FlowerSettingYellow();
+                CallChildQuestMethod(MyGarden, MT.ToString());
             }
         }
         else if (ML == MissionLocation.waterfall) {
@@ -208,6 +209,7 @@ public class WeatherMissionManager : MonoBehaviour
         }
         else if (ML == MissionLocation.myGarden) {
             MyGarden.GetComponent<MyGardenSetting>().FlowerSettingBlue();
+            CallChildQuestMethod(MyGarden, MT.ToString());
         }
     }
 
@@ -246,7 +248,7 @@ public class WeatherMissionManager : MonoBehaviour
     void Cleaning(MissionLocation ML, MissionType MT) {
         if (ML == MissionLocation.myGarden) {
             //Cleaning 미션 초기화되는 부분 찾아서 넣기
-            CallChildQuestMethod(MyGarden, MissionType.Cleaning.ToString());
+            CallChildQuestMethod(MyHouse, MissionType.Cleaning.ToString());
         }
     }
 
@@ -276,9 +278,20 @@ public class WeatherMissionManager : MonoBehaviour
         {
             NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
         }
-        else {//봐서 플레이어용 퀘스트 스크립트 만들 수도 있음
+        else {
             NPCobj = GameObject.FindWithTag("Player");
-            NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
+            NPCobj.transform.GetChild(1).GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
+        }
+    }
+
+    public void CallMyGardenQuestMethod() {
+        CallChildQuestMethod(MyGarden, MissionType.Drought.ToString());
+    }
+
+    public void IncreaseAcceptedQuest() {
+        acceptedQuest++;
+        if (acceptedQuest == todayMissionCount) { 
+            //이 경우에만 구름 위로 올라갈 수 있음. 여기에 코드 추가
         }
     }
 }

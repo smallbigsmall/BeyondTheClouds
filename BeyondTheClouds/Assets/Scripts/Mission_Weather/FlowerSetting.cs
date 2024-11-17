@@ -10,7 +10,7 @@ public class FlowerSetting : MonoBehaviour
     private Color color;
     [SerializeField] SpriteRenderer flowerSpriteRenderer;
     [SerializeField] FlowerType flowerType;
-    private int life = 3;
+    private int life = 30;
     private int MissionMode = 1; //0 == sprout -> flower, 1 == Drought, 2 == Overwatering
     private MyGardenSetting _myGardenSetting;
     private bool isTodayMission = false;
