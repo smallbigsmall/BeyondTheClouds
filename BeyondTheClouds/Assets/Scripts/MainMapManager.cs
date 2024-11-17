@@ -54,7 +54,7 @@ public class MainMapManager : MonoBehaviour
 
     private Transform player;
 
-    private TextMeshProUGUI resultText;
+    private TextMeshProUGUI resultText, gameEndGuideText;
     private Button nextStepBtn, stageBtn;
 
     private void Awake() {
@@ -162,15 +162,23 @@ public class MainMapManager : MonoBehaviour
 
     public void DecreasePlayerHp(int amount) {
         playerHp -= amount;
-        confidenceFilledImg.fillAmount = (float)playerHp / 100;      
+        confidenceFilledImg.fillAmount = (float)playerHp / 100;
+        Color32 newColor = confidenceFilledImg.color;
+        if (playerHp <= 60) {
+            newColor = new Color32(240, 215, 23, 255);
+        }else if(playerHp <= 30) {
+            newColor = new Color32(222, 16, 29, 255);
+        }
+        confidenceFilledImg.color = newColor;
         if (playerHp <= 0) {
             playerHp = 0;
             confidencePercent.text = playerHp + "%";
+            confidencePercent.color = newColor;
             //Show pop-up
             Debug.Log($"Day {currentPlayerData.stageNum} Night game over");
 
             gameEndPanel.gameObject.SetActive(true);
-            SetGameEndUI(false);
+            SetGameEndUI(true, false);
         }
     }
 
@@ -183,21 +191,25 @@ public class MainMapManager : MonoBehaviour
             Debug.Log($"{currentPlayerData.stageNum} night game clear");
 
             gameEndPanel.gameObject.SetActive(true);
-            SetGameEndUI(true);
+            SetGameEndUI(true, true);
         }
     }
 
-    private void SetGameEndUI(bool isCleared) {
-        if (isCleared) {            
-            nextStepBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "다음 단계";
-            resultText.text = "Game Clear";
+    private void SetGameEndUI(bool isNight, bool isCleared) {
+        if (!isNight) {
+            gameEndGuideText.text = "Night 게임을 플레이하시겠습니까?";
+            resultText.text = "Mission Clear";
         }
         else {
-            nextStepBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "다시 플레이";
-            resultText.text = "Game Over";
-        }
-
-
+            if (isCleared) {
+                gameEndGuideText.text = "다음 날짜를\n플레이하시겠습니까?";
+                resultText.text = "Game Clear";
+            }
+            else {
+                gameEndGuideText.text = "다시 플레이하시겠습니까?";
+                resultText.text = "Game Over";
+            }
+        }        
     }
 
     private void ReloadMainMap() {
@@ -219,9 +231,10 @@ public class MainMapManager : MonoBehaviour
     {
         InitializeMainMap();
 
-        resultText = gameEndPanel.GetChild(0).GetComponent<TextMeshProUGUI>();
-        nextStepBtn = gameEndPanel.GetChild(1).GetComponent<Button>();
-        stageBtn = gameEndPanel.GetChild(2).GetComponent<Button>();
+        resultText = gameEndPanel.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
+        gameEndGuideText = gameEndPanel.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        nextStepBtn = gameEndPanel.GetChild(1).GetChild(1).GetComponent<Button>();
+        stageBtn = gameEndPanel.GetChild(1).GetChild(2).GetComponent<Button>();
 
         nextStepBtn.onClick.AddListener(ReloadMainMap);
         stageBtn.onClick.AddListener(GoToMainMenu);

@@ -139,6 +139,7 @@ MonoBehaviour:
   pos: {x: 0, y: 0}
   forMoving: 0
   isRaining: 0
+  rainSystem: {fileID: 1369339519039679001}
 --- !u!50 &4101050293155713539
 Rigidbody2D:
   serializedVersion: 4
@@ -3785,10 +3786,10 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
-    type: 0
-    collisionMode: 0
+    type: 1
+    collisionMode: 1
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
     multiplyColliderForceByParticleSpeed: 0
@@ -3962,7 +3963,7 @@ ParticleSystem:
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:

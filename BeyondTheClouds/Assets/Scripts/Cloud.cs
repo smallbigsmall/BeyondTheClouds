@@ -12,6 +12,9 @@ public class Cloud : MonoBehaviour
 
     private PlayerMoveController ownerController;
     private new Rigidbody2D rigidbody;
+
+    [SerializeField]
+    private ParticleSystem rainSystem;
    
     // Start is called before the first frame update
     void Start()
@@ -49,10 +52,13 @@ public class Cloud : MonoBehaviour
     }
 
     public void MakeRain() {
-        transform.GetChild(0).gameObject.SetActive(true);
+        rainSystem.gameObject.SetActive(true);
 /*        ParticleSystem particle = transform.GetChild(0).GetComponent<ParticleSystem>();
         particle.Play();*/
     }
 
+    private void OnParticleCollision(GameObject other) {
+        
+    }
 
 }

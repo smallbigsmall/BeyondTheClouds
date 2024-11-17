@@ -43,7 +43,7 @@ public class DialogueSystem : MonoBehaviour
         totalDialogue = JsonUtility.FromJson<DialogueList>(textAsset.ToString());
         dialogueList = totalDialogue.dialogues;
 
-        Display();
+        if(!isPrologue) Display();
     }
 
     // Update is called once per frame
@@ -54,7 +54,7 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
-    private void Display() {
+    public void Display() {
         onePartFinished = false;
         nextBtn.SetActive(false);
         if (index < dialogueList.Count) {           
@@ -62,7 +62,6 @@ public class DialogueSystem : MonoBehaviour
             StartCoroutine(ShowText(currentDialogue));
         }
         else {
-            Debug.Log("Prologue end");
             EndDialogueSetting();           
         }
     }
