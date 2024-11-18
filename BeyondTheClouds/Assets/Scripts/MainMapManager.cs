@@ -56,6 +56,8 @@ public class MainMapManager : MonoBehaviour
 
     private TextMeshProUGUI resultText, gameEndGuideText;
     private Button nextStepBtn, stageBtn;
+    private GameObject skillPanel;
+    private Image fadeOutBackground;
 
     private void Awake() {
         currentPlayerData = GameManager.Instance.GetCurrentPlayerData();
@@ -70,9 +72,12 @@ public class MainMapManager : MonoBehaviour
             player = Instantiate(mPlayer).transform;
         }
 
+        GameObject.FindWithTag("MainCamera").GetComponent<CameraController>().FindPlayer(player.transform);
+        skillPanel = FindAnyObjectByType<PlayerSkillManager>().gameObject;
+
         if (currentPlayerData.dayCleared) { //start nighttime game
             player.position = new Vector2(-20, -80);
-            FindAnyObjectByType<PlayerSkillManager>().gameObject.SetActive(false);
+            SetSkillPanel(false, true);
             confidenceBar.gameObject.SetActive(true);
             confidenceFilledImg = confidenceBar.Find("Fill").GetComponent<Image>();
             confidencePercent = confidenceBar.Find("Percent").GetComponent<TextMeshProUGUI>();
@@ -80,7 +85,7 @@ public class MainMapManager : MonoBehaviour
         }
         else {
             player.position = new Vector2(53, -74);
-            FindAnyObjectByType<PlayerSkillManager>().gameObject.SetActive(true);
+            SetSkillPanel(false, true);
             confidenceBar.gameObject.SetActive(false);
             InitializeDatetimeGame();          
         }
@@ -170,10 +175,11 @@ public class MainMapManager : MonoBehaviour
             newColor = new Color32(222, 16, 29, 255);
         }
         confidenceFilledImg.color = newColor;
+        confidencePercent.text = playerHp + "%";
+        confidencePercent.color = newColor;
         if (playerHp <= 0) {
             playerHp = 0;
             confidencePercent.text = playerHp + "%";
-            confidencePercent.color = newColor;
             //Show pop-up
             Debug.Log($"Day {currentPlayerData.stageNum} Night game over");
 
@@ -212,6 +218,20 @@ public class MainMapManager : MonoBehaviour
         }        
     }
 
+    public void FinishDay() {
+        StartCoroutine(FadeOut());
+    }
+
+    IEnumerator FadeOut() {
+        float alpha = 0f;
+        while(alpha < 1) {
+            alpha += 0.01f;
+            yield return new WaitForSeconds(0.01f);
+            fadeOutBackground.color = new Color(0, 0, 0, alpha);
+        }
+        SetGameEndUI(false, true);
+    }
+
     private void ReloadMainMap() {
         string mainMap = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(mainMap);
@@ -227,6 +247,25 @@ public class MainMapManager : MonoBehaviour
         roomCleaner.FinishCleaning();
     }
 
+    public void SetSkillPanel(bool showing, bool onCloudMap) {
+        if (showing) {
+            skillPanel.SetActive(true);
+            if (onCloudMap) {
+                for(int i = 1; i < skillPanel.transform.childCount-1; i++) {
+                    skillPanel.transform.GetChild(i).GetComponent<Button>().interactable = false;
+                }
+            }
+            else {
+                for (int i = 0; i < skillPanel.transform.childCount; i++) {
+                    skillPanel.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                }
+            }
+        }
+        else {
+            skillPanel.SetActive(false);
+        }
+    }
+
     void Start()
     {
         InitializeMainMap();
@@ -235,6 +274,7 @@ public class MainMapManager : MonoBehaviour
         gameEndGuideText = gameEndPanel.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
         nextStepBtn = gameEndPanel.GetChild(1).GetChild(1).GetComponent<Button>();
         stageBtn = gameEndPanel.GetChild(1).GetChild(2).GetComponent<Button>();
+        fadeOutBackground = gameEndPanel.parent.GetChild(1).GetComponent<Image>();
 
         nextStepBtn.onClick.AddListener(ReloadMainMap);
         stageBtn.onClick.AddListener(GoToMainMenu);

@@ -12,6 +12,7 @@ public class Cloud : MonoBehaviour
 
     private PlayerMoveController ownerController;
     private new Rigidbody2D rigidbody;
+    private MainMapManager mainMapManager;
 
     [SerializeField]
     private ParticleSystem rainSystem;
@@ -20,6 +21,7 @@ public class Cloud : MonoBehaviour
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        mainMapManager = FindAnyObjectByType<MainMapManager>();
     }
 
     // Update is called once per frame
@@ -47,18 +49,28 @@ public class Cloud : MonoBehaviour
     public void SetOwnerController(PlayerMoveController controller) {
         ownerController = controller;
         ownerController.SetOnCloud(true);
+        ownerController.SetMovingCloud(gameObject);
         //rigidbody = transform.gameObject.AddComponent<Rigidbody2D>();
         rigidbody.bodyType = RigidbodyType2D.Kinematic;
     }
 
     public void MakeRain() {
+        if (forMoving) return;
+        var cloudColor = GetComponent<SpriteRenderer>().color;
+        if (cloudColor.a < 1) return;
         rainSystem.gameObject.SetActive(true);
 /*        ParticleSystem particle = transform.GetChild(0).GetComponent<ParticleSystem>();
         particle.Play();*/
     }
 
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("Border")) {
+            mainMapManager.SetSkillPanel(true, false);
+        }
+    }
+
     private void OnParticleCollision(GameObject other) {
-        
+        Debug.Log("Collision in cloud: "+other.name);
     }
 
 }

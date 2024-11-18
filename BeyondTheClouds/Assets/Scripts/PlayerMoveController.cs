@@ -15,9 +15,11 @@ public class PlayerMoveController : MonoBehaviour
     private Animator animator;
     public bool isMoving { get; private set; }
     private bool isWalking, onCloud;
+    private GameObject movingCloud;
     private bool isNight;
     private Vacuum vacuum = null;
     private Transform playerWand;
+    private bool readyToFinishDay;
 
     private MainMapManager mainMapManager;
 
@@ -116,6 +118,10 @@ public class PlayerMoveController : MonoBehaviour
         this.onCloud = onCloud;
     }
 
+    public void SetMovingCloud(GameObject cloud) {
+        movingCloud = cloud;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision) {
         Debug.Log($"Collision: {collision.gameObject.name}");
 
@@ -124,12 +130,39 @@ public class PlayerMoveController : MonoBehaviour
         }
         else if (collision.CompareTag("HouseDoor")) {
             transform.position = new Vector2(2.7f, 0.4f);
+            mainMapManager.SetSkillPanel(false, false);
         }
         else if (collision.CompareTag("GardenDoor")) {
             transform.position = new Vector2(52.5f, -78.3f);
+            mainMapManager.SetSkillPanel(false, false);
         }
         else if (collision.CompareTag("Portal")) {
             transform.position = new Vector2(-3.5f,-20f);
+            mainMapManager.SetSkillPanel(true, true);
+        }else if (collision.CompareTag("Bed")) {
+            if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
+                Debug.Log("Clear daytime mission");
+                readyToFinishDay = true;
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.CompareTag("Bed")) {
+            if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
+                readyToFinishDay = false;
+            }
+        }
+        if (collision.CompareTag("CloudMap") && onCloud) {
+            onCloud = false;
+            Destroy(movingCloud);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision) {
+        if(collision.transform.CompareTag("CloudMap") && onCloud) {
+            onCloud = false;
+            Destroy(movingCloud);
         }
     }
 
@@ -143,10 +176,15 @@ public class PlayerMoveController : MonoBehaviour
                 wind.GetComponent<WindProjectile>().ShootWind(new Vector2(animator.GetFloat("XDir"), animator.GetFloat("YDir")));
             }
             else {
-                if (vacuum == null) return;
-
-                if (vacuum.IsFinishingCleaningReady()) { //mission clear
+                if (vacuum != null && vacuum.IsFinishingCleaningReady()) { //mission clear
                     mainMapManager.CleaningMissionFinished();
+                }else if (readyToFinishDay) {
+                    animator.SetFloat("XDir", -1);
+                    animator.SetFloat("YDir", 1);
+                    animator.enabled = false;
+                    spriteRenderer.flipY = true;
+                    transform.position = new Vector2(49f, -79.2f);
+                    mainMapManager.FinishDay();
                 }
             }
             

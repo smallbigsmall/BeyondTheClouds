@@ -11,11 +11,7 @@ public class CameraController : MonoBehaviour
     private bool playerLoaded;
 
     private void Start() {
-        StartCoroutine(FindPlayer());
-
-        if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
-            transform.GetComponent<Camera>().orthographicSize = 8f;
-        }
+        
     }
     private void FixedUpdate() {
         if (!playerLoaded) return;
@@ -28,9 +24,11 @@ public class CameraController : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPos, smoothing);
     }
 
-    IEnumerator FindPlayer() {
-        yield return new WaitForSeconds(0.3f);
-        player = FindAnyObjectByType<PlayerMoveController>().transform;
-        if (player != null) playerLoaded = true;
+    public void FindPlayer(Transform player) {
+        this.player = player;
+        playerLoaded = true;
+        if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
+            transform.GetComponent<Camera>().orthographicSize = 8f;
+        }
     }
 }

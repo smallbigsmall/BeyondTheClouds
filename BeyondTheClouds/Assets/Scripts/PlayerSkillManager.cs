@@ -13,6 +13,9 @@ public class PlayerSkillManager : MonoBehaviour
     [SerializeField]
     private GameObject cloudPrefab;
 
+    [SerializeField]
+    private Tilemap cloudMap;
+
     private PlayerSkill playerSkill;
 
     // Start is called before the first frame update
@@ -50,20 +53,18 @@ public class PlayerSkillManager : MonoBehaviour
                 case PlayerSkill.Removing: {
                         GameObject hitObj = hit.transform.gameObject;
                         if (hitObj.CompareTag("Cloud")) {
-                            Destroy(hitObj);
+                            if (hitObj.GetComponent<Cloud>().forMoving) return;
+                            StartCoroutine(RemovingCloud(hitObj));
                         }
                     }
                     break;
-                case PlayerSkill.Moving: { 
-                        if(hit.collider == null) {
-                            GameObject cloudObj = Instantiate(cloudPrefab, pos, Quaternion.identity);
-                            cloudObj.transform.GetComponent<Cloud>().forMoving = true;
-                        }
+                case PlayerSkill.Moving: {
+                        MakingMovingCloud(pos);
                     }
                     break;
                 default: {
                         if (hit.collider == null) return;
-                            Cloud cloud;
+                        Cloud cloud;
                         if (hit.transform.TryGetComponent<Cloud>(out cloud)) {
                             if (cloud.forMoving) {
                                 Vector3 playerPos = cloud.transform.position;
@@ -77,6 +78,28 @@ public class PlayerSkillManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void MakingMovingCloud(Vector2 pos) {
+        Vector3Int clickedPos = cloudMap.WorldToCell(pos);
+        TileBase clickedTile = cloudMap.GetTile(clickedPos);
+
+        if(clickedTile == null) {
+            GameObject cloudObj = Instantiate(cloudPrefab, pos, Quaternion.identity);
+            cloudObj.transform.GetComponent<Cloud>().forMoving = true;
+        }
+    }
+
+    IEnumerator RemovingCloud(GameObject cloud) {
+        float totalLife = 3f;
+        float life = totalLife;
+        while(life > 0) {
+            life = life > 0 ? life - Time.deltaTime : 0;
+            var cloudColor = cloud.transform.GetComponent<SpriteRenderer>().color;
+            cloudColor.a = life / totalLife;
+            yield return new WaitForSeconds(0.001f);
+        }
+        Destroy(cloud);
     }
 
     private void CheckTile(RaycastHit2D hit, Vector2 pos) {

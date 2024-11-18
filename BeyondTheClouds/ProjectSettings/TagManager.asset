@@ -22,6 +22,9 @@ TagManager:
   - DialogueCanvas
   - GardenDoor
   - HouseDoor
+  - Border
+  - CloudMap
+  - Bed
   layers:
   - Default
   - TransparentFX
