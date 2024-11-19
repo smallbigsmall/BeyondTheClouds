@@ -11,7 +11,7 @@ public class CropSetting : MonoBehaviour
     private Color color;
     private SpriteRenderer cropSpriteRenderer;
     [SerializeField] CropType cropType;
-    private int life = 30;
+    private int life = 15;
     private int lifeForShadow = 0;
     private bool isDroughtCrop = false;
     private bool isTodayMission = false;

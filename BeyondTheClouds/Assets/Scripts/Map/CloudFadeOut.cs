@@ -8,32 +8,39 @@ public class CloudFadeOut : MonoBehaviour
     //지도랑 플랫폼에 동일하게 사용
 
     [SerializeField] GameObject Clouds;
-    public int day;
-    
-
-    void Start()
-    {
-        
-        
-        //이 부분은 실제맵에서만 작동하게 바꾸기
-        //if (day > 0 && day - 1 < Clouds.transform.childCount) {
-        //    FadeOutCloud();
-        //}
-    }
+    [SerializeField] WeatherMissionManager _weatherMissionManager;
+    private int day;
 
     public void initCloud(int day) {
         this.day = day;
-        for (int i = 0; i < day - 1; i++)
-        { //2일차부터 구름 비활성화됨
+        for (int i = 0; i < day - 2; i++)
+        { //3일차부터 시작시 구름 비활성화됨(2일차는 페이드아웃으로 비활성화)
             if (i < Clouds.transform.childCount)
                 Clouds.transform.GetChild(i).gameObject.SetActive(false);
         }
     }
 
-    void FadeOutCloud() {
-        GameObject tomorrowCloud = Clouds.transform.GetChild(day-1).gameObject;
-        Tilemap cloudTilemap = tomorrowCloud.GetComponent<Tilemap>();
-        StartCoroutine(FadeOut(cloudTilemap));
+    public void initCloudMap(int day)
+    {
+        this.day = day;
+        for (int i = 0; i < day - 1; i++)
+        { //2일차부터 시작시 구름 비활성화됨
+            if (i < Clouds.transform.childCount)
+                Clouds.transform.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    public void FadeOutCloud(int day) {
+        if (day > 1 && day - 1 < Clouds.transform.childCount) {
+            GameObject todayCloud = Clouds.transform.GetChild(day - 2).gameObject;
+            Tilemap cloudTilemap = todayCloud.GetComponent<Tilemap>();
+            StartCoroutine(Delay(cloudTilemap));
+        }  
+    }
+
+    IEnumerator Delay(Tilemap cloud) {
+        yield return new WaitForSeconds(3);
+        StartCoroutine(FadeOut(cloud));
     }
 
     IEnumerator FadeOut(Tilemap cloud) {
@@ -44,8 +51,10 @@ public class CloudFadeOut : MonoBehaviour
             StartCoroutine(FadeOut(cloud));
         }
         else {
+            //여기에서 카메라 다시 원래대로 돌아간 뒤에 아래 실행되어야함
             cloud.gameObject.SetActive(false);
             cloud.color = new Color(cloud.color.r, cloud.color.g, cloud.color.b, 1);
+            _weatherMissionManager.StartMissoinSetting(0, day);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Fire_rainCout : MonoBehaviour
 {
-    private int life = 50;
+    private int life = 30;
     private float animSpeed = 1;
 
     private void OnTriggerEnter2D(Collider2D collision)
