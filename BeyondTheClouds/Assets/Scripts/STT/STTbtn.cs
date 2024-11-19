@@ -12,12 +12,12 @@ public class STTbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void Start()
     {
-        //만약 키가 없으면 버튼 비활성화 시키기
-        if (true)
+        if (GameManager.Instance.getSttKey().Equals(""))
         {
             gameObject.GetComponent<Button>().interactable = false;
         }
-        else {
+        else
+        {
             gameObject.GetComponent<Button>().interactable = true;
         }
     }
@@ -32,10 +32,12 @@ public class STTbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        popup.SetActive(true);
+        if(!GameManager.Instance.getSttKey().Equals(""))
+            popup.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData) {
-        popup.SetActive(false);
+        if (!GameManager.Instance.getSttKey().Equals(""))
+            popup.SetActive(false);
     }
 }

@@ -25,7 +25,7 @@ public class ConvertToWAV : MonoBehaviour
         stream.Write(BitConverter.GetBytes(36 + samples * channels * 2), 0, 4);
         stream.Write(System.Text.Encoding.ASCII.GetBytes("WAVE"), 0, 4);
 
-        stream.Write(System.Text.Encoding.ASCII.GetBytes("fmt"), 0, 4);
+        stream.Write(System.Text.Encoding.ASCII.GetBytes("fmt "), 0, 4); 
         stream.Write(BitConverter.GetBytes(16), 0, 4);
         stream.Write(BitConverter.GetBytes((short)1), 0, 2);
         stream.Write(BitConverter.GetBytes((short)channels), 0, 2);
