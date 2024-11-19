@@ -31,11 +31,15 @@ public class CloudFadeOut : MonoBehaviour
     }
 
     public void FadeOutCloud(int day) {
-        if (day > 1 && day - 1 < Clouds.transform.childCount) {
+        if (day > 1 && day - 1 < Clouds.transform.childCount)
+        {
             GameObject todayCloud = Clouds.transform.GetChild(day - 2).gameObject;
             Tilemap cloudTilemap = todayCloud.GetComponent<Tilemap>();
             StartCoroutine(Delay(cloudTilemap));
-        }  
+        }
+        else {
+            _weatherMissionManager.StartMissoinSetting(0, day);
+        }
     }
 
     IEnumerator Delay(Tilemap cloud) {
