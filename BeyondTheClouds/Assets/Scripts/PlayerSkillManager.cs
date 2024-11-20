@@ -28,9 +28,9 @@ public class PlayerSkillManager : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) {
-            if (EventSystem.current.IsPointerOverGameObject()) {
+            /*if (EventSystem.current.IsPointerOverGameObject()) {
                 return;
-            }
+            }*/
 
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);

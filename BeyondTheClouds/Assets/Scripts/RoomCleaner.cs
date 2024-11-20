@@ -23,7 +23,7 @@ public class RoomCleaner : MissionSettingWithQuest
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player").transform;
+        
     }
 
     public void InitializeRoomCleanMission() {
@@ -31,9 +31,11 @@ public class RoomCleaner : MissionSettingWithQuest
 
         totalTrashNum = trashParent.childCount;
 
-        foreach(GameObject trash in trashParent) {
-            trash.SetActive(true);
+        for(int i = 0; i < trashParent.childCount; i++)
+        {
+            trashParent.GetChild(i).gameObject.SetActive(true);
         }
+        
 
         int additionalTrashNum = Random.Range(5, 9);
         Vector2 minPos = trashZone.GetChild(1).position;
@@ -49,6 +51,8 @@ public class RoomCleaner : MissionSettingWithQuest
             GameObject trash = Instantiate(trashObjects[randObjIdx], new Vector3(randPosX, randPosY), Quaternion.identity);
             trash.transform.SetParent(trashParent);
         }
+
+        player = GameObject.FindWithTag("Player").transform;
 
         playerVacuum = Instantiate(vacuum, player);
         playerVacuum.transform.localPosition = new Vector2(-0.16f, -1f);

@@ -60,6 +60,8 @@ public class NPCQuest : MonoBehaviour
                         currentLineIndex = 0;
                         missionIndex = -1;
                         FindAnyObjectByType<WeatherMissionManager>().CallMyGardenQuestMethod();
+                        RoomCleaner roomCleaner = FindAnyObjectByType<RoomCleaner>();
+                        roomCleaner.InitializeRoomCleanMission();
                     }
                 }
             }
@@ -89,9 +91,9 @@ public class NPCQuest : MonoBehaviour
         this.day = day;
         isQuestNPC = true;
         QuestPopup.SetActive(true);
-        MapQuestMark.SetActive(true);
         mission = Mission;
         isQuestAccepted = false;
+        MapQuestMark.SetActive(true);
     }
 
     public void StartConversation() {

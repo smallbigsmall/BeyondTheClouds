@@ -6,20 +6,6 @@ using TMPro;
 
 public class WeatherMissionManager : MonoBehaviour
 {
-    //�̺�Ʈ1(1����)
-    //  �̺�Ʈ����1
-    //  �̺�Ʈ ����
-    //  �̺�Ʈ ���
-    //
-    //  �̺�Ʈ����2
-    //  �̺�Ʈ ����
-    //  �̺�Ʈ ���
-
-
-    //���⼭ NPC���� ����Ʈ ��ũ ���Բ� ��ų�ǵ� My Garden�� ���
-    //NPC�� �����Ƿ� ��ŵ. ��� �÷��̾����� ����Ʈ ��ũ�� ������
-
-    //�̼��̸� �빮�ڷ� ������ ��
     public enum MissionType { None, Drought, Overwatering, Heatstroke, Fire, Cleaning, Random};
     public enum MissionLocation { None, myGarden, farm2, farm3, waterfall, forest, mountain, mine, Random };
 
@@ -57,6 +43,8 @@ public class WeatherMissionManager : MonoBehaviour
 
     [SerializeField] GameObject QuestUIPrefab, QuestScrollView;
 
+    [SerializeField] GameObject GardenQuestMark;
+
 
     //void Start()
     //{
@@ -71,8 +59,6 @@ public class WeatherMissionManager : MonoBehaviour
 
         if(Application.isPlaying)
         missionListOfDay.Add(new MissionListOfDay(day, newMissions));
-        //7�� ���ĺ��ʹ� Ư�� ��¥�� Ư�� �̼��� �߰��ϰ� ���� �� if�� �̿��Ͽ� �߰��ϱ�
-        //��Ȳ�� ���� ���ο� �̼� �߰��Ǵ� ��¥�� �ν����Ϳ��� �����ϴ� �͵� ����
     }
 
     public void StartMissoinSetting(int index, int day) { //�ν����Ϳ��� ������ ������ �������� �������� ������ �̼��� ������ ������
@@ -138,7 +124,6 @@ public class WeatherMissionManager : MonoBehaviour
 
         tempLocation = (MissionLocation)Enum.ToObject(typeof(MissionLocation), tempLocationNum);
 
-        //Ȯ�� ������ ��� �̼� �߰��Ǵ� ���뿡 ���� if�� �ȿ� day���� �������� �� �� ����
         if (tempLocation == MissionLocation.farm2 || tempLocation == MissionLocation.farm3)
         {
             tempTypeNum = UnityEngine.Random.Range(1, 4);
@@ -248,10 +233,6 @@ public class WeatherMissionManager : MonoBehaviour
 
     void Cleaning(MissionLocation ML, MissionType MT) {
         if (ML == MissionLocation.myGarden) {
-            //Cleaning �̼� �ʱ�ȭ�Ǵ� �κ� ã�Ƽ� �ֱ�
-            RoomCleaner roomCleaner = FindAnyObjectByType<RoomCleaner>();
-            roomCleaner.InitializeRoomCleanMission();
-
             CallChildQuestMethod(MyGarden, MissionType.Cleaning.ToString());
         }
     }
@@ -284,6 +265,7 @@ public class WeatherMissionManager : MonoBehaviour
         }
         else {
             NPCobj = GameObject.FindWithTag("Player");
+            NPCobj.transform.GetChild(1).GetComponent<NPCQuest>().MapQuestMark = GardenQuestMark;
             NPCobj.transform.GetChild(1).GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
         }
     }

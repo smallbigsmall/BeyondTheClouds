@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     //전체적인 게임 흐름 관리
     //MainMap scene으로 넘어가면 그 scene의 매니저에게 필요한 정보 넘겨주기
 
-    private string sttKey;
+    private string sttKey = "";
 
     private PlayerData playerData;
     private void Awake() {

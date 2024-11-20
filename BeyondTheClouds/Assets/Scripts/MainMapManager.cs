@@ -95,9 +95,9 @@ public class MainMapManager : MonoBehaviour
     }
 
     private void InitializeDatetimeGame() {
-        _weatherMissionManager.StartMissoinSetting(0, currentPlayerData.stageNum);
         _cloudFadeOut.initCloud(currentPlayerData.stageNum);
         _cloudFadeOutMap.initCloud(currentPlayerData.stageNum);
+        _cloudFadeOut.FadeOutCloud(currentPlayerData.stageNum);
     }
 
     private void InitializeNighttimeGame() {
