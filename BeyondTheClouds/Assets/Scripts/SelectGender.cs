@@ -11,7 +11,7 @@ public class SelectGender : MonoBehaviour
     void Start()
     {
         PlayerData currentPlayerData = GameManager.Instance.GetCurrentPlayerData();
-
+        Debug.Log("Current player gender: " + currentPlayerData.gender);
         if (currentPlayerData.gender != 'm' && currentPlayerData.gender != 'f') {
             genderPanel.SetActive(true);
             dialogueBox.SetActive(false);
@@ -19,6 +19,7 @@ public class SelectGender : MonoBehaviour
     }
 
     public void SelectPlayerGender(string gender) {
+        PlayerDataManager.Instance.SetPlayerGender(gender[0]);
         GameManager.Instance.SetCurrentPlayerGender(gender[0]);
 
         int startBtnIdx = genderPanel.transform.childCount - 1;

@@ -1,50 +1,50 @@
 {"dialogues":[
   {
-    "Background":"",
+    "Background":"Room",
     "Text": "나는 히키코모리다."
   },
   {
-    "Background":"",
+    "Background":"CloudMap",
     "Text": "원래는 날씨 관리자였다."
   },
   {
-    "Background":"",
+    "Background":"DayMission",
     "Text": "사람들의 요청을 듣고 날씨를 관리해주는 일을 하였다."
   },
   {
-    "Background":"",
+    "Background":"DayMission",
     "Text": "구름을 타고 이동하고, 자유자재로 조절하는 일이 아주 재밌었다.\n고마워하는 사람들을 보면서 뿌듯함도 느꼈다."
   },
   {
-    "Background":"",
+    "Background":"DayMission",
     "Text": "일을 할수록 자신감이 늘어갔다."
   },
   {
-    "Background":"",
+    "Background":"FarmFail",
     "Text": "하지만 어느날 크게 실수를 저지르고 말았다."
   },
   {
-    "Background":"",
-    "Text": "내가 한 농부의 일년동안의 노력을 물거품으로 만들고 말았다."
+    "Background":"FarmFail",
+    "Text": "나 때문에 한 농부의 일년동안의 노력이 물거품이 되었다."
   },
   {
-    "Background":"",
+    "Background":"Room",
     "Text": "나는 더이상 이 일을 할 수가 없었다."
   },
   {
-    "Background":"",
+    "Background":"Room",
     "Text": "밖에서 사람들을 마주치는 것조차 두려웠다.\n그래서 방 밖으로 나올 수가 없었다."
   },
   {
-    "Background":"",
+    "Background":"Room",
     "Text": "내 도움을 필요로 하는 사람들의 목소리가 계속 들렸지만 나는 밖으로 나갈 수 없다."
   },
   {
-    "Background":"",
+    "Background":"Room",
     "Text": "이런 내가 한심하다. 이제는 밖으로 나가고 싶다.\n다시 예전으로 돌아가고 싶다."
   },
   {
-    "Background":"",
+    "Background":"Room",
     "Text": "하지만....너무 두렵다..."
   }
 ]
