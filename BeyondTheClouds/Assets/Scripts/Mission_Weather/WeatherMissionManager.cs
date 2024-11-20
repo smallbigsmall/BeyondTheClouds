@@ -6,25 +6,25 @@ using TMPro;
 
 public class WeatherMissionManager : MonoBehaviour
 {
-    //ÀÌº¥Æ®1(1ÀÏÂ÷)
-    //  ÀÌº¥Æ®¼¼ºÎ1
-    //  ÀÌº¥Æ® Á¾·ù
-    //  ÀÌº¥Æ® Àå¼Ò
+    //ï¿½Ìºï¿½Æ®1(1ï¿½ï¿½ï¿½ï¿½)
+    //  ï¿½Ìºï¿½Æ®ï¿½ï¿½ï¿½ï¿½1
+    //  ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+    //  ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½
     //
-    //  ÀÌº¥Æ®¼¼ºÎ2
-    //  ÀÌº¥Æ® Á¾·ù
-    //  ÀÌº¥Æ® Àå¼Ò
+    //  ï¿½Ìºï¿½Æ®ï¿½ï¿½ï¿½ï¿½2
+    //  ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+    //  ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½
 
 
-    //¿©±â¼­ NPCÇÑÅ× Äù½ºÆ® ¸¶Å© ¶ç¿ì°Ô²û ½ÃÅ³°Çµ¥ My GardenÀÇ °æ¿ì
-    //NPC°¡ ¾øÀ¸¹Ç·Î ½ºÅµ. ´ë½Å ÇÃ·¹ÀÌ¾îÇÑÅ× Äù½ºÆ® ¸¶Å©°¡ ¶°¾ßÇÔ
+    //ï¿½ï¿½ï¿½â¼­ NPCï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Å© ï¿½ï¿½ï¿½Ô²ï¿½ ï¿½ï¿½Å³ï¿½Çµï¿½ My Gardenï¿½ï¿½ ï¿½ï¿½ï¿½
+    //NPCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½Åµ. ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    //¹Ì¼ÇÀÌ¸§ ´ë¹®ÀÚ·Î ½ÃÀÛÇÒ °Í
+    //ï¿½Ì¼ï¿½ï¿½Ì¸ï¿½ ï¿½ë¹®ï¿½Ú·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     public enum MissionType { None, Drought, Overwatering, Heatstroke, Fire, Cleaning, Random};
     public enum MissionLocation { None, myGarden, farm2, farm3, waterfall, forest, mountain, mine, Random };
 
     [Serializable]
-    public class MissionInform { //¹Ì¼Ç ¼¼ºÎ ³»¿ë
+    public class MissionInform { //ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         
         public MissionType Mission_Type;
         public MissionLocation Location;
@@ -37,7 +37,7 @@ public class WeatherMissionManager : MonoBehaviour
     }
 
     [Serializable]
-    public class MissionListOfDay { //ÇÏ·çÄ¡ ¹Ì¼Ç ¸®½ºÆ®
+    public class MissionListOfDay { //ï¿½Ï·ï¿½Ä¡ ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
         public int day;
         public List<MissionInform> missionList = new List<MissionInform>();
 
@@ -48,10 +48,10 @@ public class WeatherMissionManager : MonoBehaviour
         }
     }
 
-    public int currentDay = 0; //for test
-    public List<MissionListOfDay> missionListOfDay = new List<MissionListOfDay>(); //¸ðµç dayÀÇ ¹Ì¼Ç
+    private int currentDay = 0, acceptedQuest = 0;
+    public List<MissionListOfDay> missionListOfDay = new List<MissionListOfDay>(); //ï¿½ï¿½ï¿½ dayï¿½ï¿½ ï¿½Ì¼ï¿½
 
-    [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine;
+    [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine, MyHouse;
 
     private int todayMissionCount = -1, randomStartIndex = -1;
 
@@ -71,11 +71,11 @@ public class WeatherMissionManager : MonoBehaviour
 
         if(Application.isPlaying)
         missionListOfDay.Add(new MissionListOfDay(day, newMissions));
-        //7ÀÏ ÀÌÈÄºÎÅÍ´Â Æ¯Á¤ ³¯Â¥¿¡ Æ¯Á¤ ¹Ì¼ÇÀ» Ãß°¡ÇÏ°í ½ÍÀ» ½Ã if¹® ÀÌ¿ëÇÏ¿© Ãß°¡ÇÏ±â
-        //»óÈ²¿¡ µû¶ó »õ·Î¿î ¹Ì¼Ç Ãß°¡µÇ´Â ³¯Â¥¸¸ ÀÎ½ºÆåÅÍ¿¡¼­ ÁöÁ¤ÇÏ´Â °Íµµ °í·Á
+        //7ï¿½ï¿½ ï¿½ï¿½ï¿½Äºï¿½ï¿½Í´ï¿½ Æ¯ï¿½ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ifï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ ï¿½ß°ï¿½ï¿½Ï±ï¿½
+        //ï¿½ï¿½È²ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½Ì¼ï¿½ ï¿½ß°ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½ ï¿½Î½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
-    public void StartMissoinSetting(int index, int day) { //ÀÎ½ºÆåÅÍ¿¡¼­ ÁöÁ¤½Ã ¹«Á¶°Ç ·£´ýº¸´Ù ¼öµ¿À¸·Î ÁöÁ¤µÈ ¹Ì¼ÇÀÌ ¾ÕÀ¸·Î ¿Àµµ·Ï
+    public void StartMissoinSetting(int index, int day) { //ï¿½Î½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         List<MissionInform> todayMission;
         currentDay = day;
 
@@ -138,7 +138,7 @@ public class WeatherMissionManager : MonoBehaviour
 
         tempLocation = (MissionLocation)Enum.ToObject(typeof(MissionLocation), tempLocationNum);
 
-        //È®Àå ¹öÀüÀÇ °æ¿ì ¹Ì¼Ç Ãß°¡µÇ´Â ³»¿ë¿¡ µû¶ó if¹® ¾È¿¡ dayº°·Î ³ª´²¾ßÇÒ ¼ö µµ ÀÖÀ½
+        //È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ì¼ï¿½ ï¿½ß°ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ë¿¡ ï¿½ï¿½ï¿½ï¿½ ifï¿½ï¿½ ï¿½È¿ï¿½ dayï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (tempLocation == MissionLocation.farm2 || tempLocation == MissionLocation.farm3)
         {
             tempTypeNum = UnityEngine.Random.Range(1, 4);
@@ -187,6 +187,7 @@ public class WeatherMissionManager : MonoBehaviour
             } 
             else{
                 MyGarden.GetComponent<MyGardenSetting>().FlowerSettingYellow();
+                CallChildQuestMethod(MyGarden, MT.ToString());
             }
         }
         else if (ML == MissionLocation.waterfall) {
@@ -209,6 +210,7 @@ public class WeatherMissionManager : MonoBehaviour
         }
         else if (ML == MissionLocation.myGarden) {
             MyGarden.GetComponent<MyGardenSetting>().FlowerSettingBlue();
+            CallChildQuestMethod(MyGarden, MT.ToString());
         }
     }
 
@@ -246,7 +248,7 @@ public class WeatherMissionManager : MonoBehaviour
 
     void Cleaning(MissionLocation ML, MissionType MT) {
         if (ML == MissionLocation.myGarden) {
-            //Cleaning ¹Ì¼Ç ÃÊ±âÈ­µÇ´Â ºÎºÐ Ã£¾Æ¼­ ³Ö±â
+            //Cleaning ï¿½Ì¼ï¿½ ï¿½Ê±ï¿½È­ï¿½Ç´ï¿½ ï¿½Îºï¿½ Ã£ï¿½Æ¼ï¿½ ï¿½Ö±ï¿½
             RoomCleaner roomCleaner = FindAnyObjectByType<RoomCleaner>();
             roomCleaner.InitializeRoomCleanMission();
 
@@ -258,10 +260,10 @@ public class WeatherMissionManager : MonoBehaviour
         todayMissionCount -= 1;
 
         if (todayMissionCount == 0) {
-            Debug.Log("ÀÌÁ¦ ÁýÀ¸·Î µ¹¾Æ°¡ÀÚ");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½");
             GameObject newQuest = Instantiate(QuestUIPrefab);
             newQuest.transform.SetParent(QuestScrollView.transform);
-            newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "ÀÌÁ¦ ÁýÀ¸·Î\nµ¹¾Æ°¡ÀÚ!";
+            newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\nï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½!";
         }
     }
 
@@ -280,9 +282,20 @@ public class WeatherMissionManager : MonoBehaviour
         {
             NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
         }
-        else {//ºÁ¼­ ÇÃ·¹ÀÌ¾î¿ë Äù½ºÆ® ½ºÅ©¸³Æ® ¸¸µé ¼öµµ ÀÖÀ½
+        else {
             NPCobj = GameObject.FindWithTag("Player");
-            NPCobj.GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
+            NPCobj.transform.GetChild(1).GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
+        }
+    }
+
+    public void CallMyGardenQuestMethod() {
+        CallChildQuestMethod(MyGarden, MissionType.Drought.ToString());
+    }
+
+    public void IncreaseAcceptedQuest() {
+        acceptedQuest++;
+        if (acceptedQuest == todayMissionCount) { 
+            //ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¶ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½â¿¡ ï¿½Úµï¿½ ï¿½ß°ï¿½
         }
     }
 }

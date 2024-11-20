@@ -39,6 +39,7 @@ public class MainMapManager : MonoBehaviour
 
     [SerializeField]
     private RoomCleaner roomCleaner;
+    private GameObject MyGardenQuestMark;
 
     private List<Dictionary<string, Vector2>> regionList;
     private int currentRegion = -1;
@@ -74,6 +75,7 @@ public class MainMapManager : MonoBehaviour
 
         GameObject.FindWithTag("MainCamera").GetComponent<CameraController>().FindPlayer(player.transform);
         skillPanel = FindAnyObjectByType<PlayerSkillManager>().gameObject;
+        player.transform.GetChild(1).GetComponent<NPCQuest>().MapQuestMark = MyGardenQuestMark;
 
         if (currentPlayerData.dayCleared) { //start nighttime game
             player.position = new Vector2(-20, -80);
@@ -203,16 +205,16 @@ public class MainMapManager : MonoBehaviour
 
     private void SetGameEndUI(bool isNight, bool isCleared) {
         if (!isNight) {
-            gameEndGuideText.text = "Night °ÔÀÓÀ» ÇÃ·¹ÀÌÇÏ½Ã°Ú½À´Ï±î?";
+            gameEndGuideText.text = "Night ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½?";
             resultText.text = "Mission Clear";
         }
         else {
             if (isCleared) {
-                gameEndGuideText.text = "´ÙÀ½ ³¯Â¥¸¦\nÇÃ·¹ÀÌÇÏ½Ã°Ú½À´Ï±î?";
+                gameEndGuideText.text = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½\nï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½?";
                 resultText.text = "Game Clear";
             }
             else {
-                gameEndGuideText.text = "´Ù½Ã ÇÃ·¹ÀÌÇÏ½Ã°Ú½À´Ï±î?";
+                gameEndGuideText.text = "ï¿½Ù½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½?";
                 resultText.text = "Game Over";
             }
         }        

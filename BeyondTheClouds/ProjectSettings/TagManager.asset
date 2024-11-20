@@ -25,6 +25,8 @@ TagManager:
   - Border
   - CloudMap
   - Bed
+  - MyGarden
+  - PlayerDialogueCollider
   layers:
   - Default
   - TransparentFX
