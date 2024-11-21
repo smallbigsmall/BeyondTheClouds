@@ -12,13 +12,17 @@ public class NpcClickTest : MonoBehaviour
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
 
-            if (hit.collider != null && (hit.collider.CompareTag("NPC") || hit.collider.CompareTag("PlayerDialogueCollider"))) {
-                if (hit.collider.CompareTag("PlayerDialogueCollider")) {
-                    hit.collider.GetComponent<NPCQuest>().SetIsPlayerTrue();
-                }
+            if (hit.collider != null && (hit.collider.CompareTag("NPC"))) {
                 hit.collider.GetComponent<NPCQuest>().SetDialogueUI(DialogueCanvas, ChoiceUI);
                 hit.collider.GetComponent<NPCQuest>().StartConversation();
             }
         }
+    }
+
+    public void playerButtonClick() {
+        NPCQuest _npcQuest = GameObject.FindWithTag("Player").transform.GetChild(1).GetComponent<NPCQuest>();
+        _npcQuest.SetIsPlayerTrue();
+        _npcQuest.SetDialogueUI(DialogueCanvas, ChoiceUI);
+        _npcQuest.StartConversation();
     }
 }

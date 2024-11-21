@@ -16,5 +16,6 @@ public class MissionSettingWithQuest : MonoBehaviour
         questMainImg.color = new Color(questMainImg.color.r, questMainImg.color.g, questMainImg.color.b, 0.5f);
         QuestUI.transform.GetChild(1).gameObject.SetActive(true);
         mapQuestMark.SetActive(false);
+        GameObject.FindWithTag("Sound").GetComponent<SoundManager>().playQuestSound();
     }
 }

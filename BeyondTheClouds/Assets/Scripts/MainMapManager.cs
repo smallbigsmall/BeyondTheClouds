@@ -50,6 +50,8 @@ public class MainMapManager : MonoBehaviour
     private Image confidenceFilledImg;
     private TextMeshProUGUI confidencePercent;
 
+    [SerializeField] SoundManager _soundManager;
+
     PlayerData currentPlayerData;
     // Start is called before the first frame update
 
@@ -95,6 +97,7 @@ public class MainMapManager : MonoBehaviour
     }
 
     private void InitializeDatetimeGame() {
+        _soundManager.SetDay(currentPlayerData.stageNum, currentPlayerData.dayCleared);
         _cloudFadeOut.initCloud(currentPlayerData.stageNum);
         _cloudFadeOutMap.initCloud(currentPlayerData.stageNum);
         _cloudFadeOut.FadeOutCloud(currentPlayerData.stageNum);
@@ -111,7 +114,7 @@ public class MainMapManager : MonoBehaviour
         for(int i = 0; i<nightEnemyNum; i++) {
             SpawnEnemy();
         }
-        
+        _soundManager.SetDay(currentPlayerData.stageNum, currentPlayerData.dayCleared);
     }
 
     private void InitializeRegions() {

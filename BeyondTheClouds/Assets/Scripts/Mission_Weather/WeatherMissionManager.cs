@@ -43,7 +43,7 @@ public class WeatherMissionManager : MonoBehaviour
 
     [SerializeField] GameObject QuestUIPrefab, QuestScrollView;
 
-    [SerializeField] GameObject GardenQuestMark;
+    [SerializeField] GameObject GardenQuestMark, PlayerDialogueButtonCanvas;
 
 
     //void Start()
@@ -241,10 +241,9 @@ public class WeatherMissionManager : MonoBehaviour
         todayMissionCount -= 1;
 
         if (todayMissionCount == 0) {
-            Debug.Log("���� ������ ���ư���");
             GameObject newQuest = Instantiate(QuestUIPrefab);
             newQuest.transform.SetParent(QuestScrollView.transform);
-            newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "���� ������\n���ư���!";
+            newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "이제 집으로\n돌아가자!";
         }
     }
 
@@ -267,6 +266,8 @@ public class WeatherMissionManager : MonoBehaviour
             NPCobj = GameObject.FindWithTag("Player");
             NPCobj.transform.GetChild(1).GetComponent<NPCQuest>().MapQuestMark = GardenQuestMark;
             NPCobj.transform.GetChild(1).GetComponent<NPCQuest>().MakeNPCQuest(Mission, currentDay);
+            PlayerDialogueButtonCanvas.SetActive(true);
+            NPCobj.transform.GetChild(1).GetComponent<NPCQuest>().setPlayerDialogueButtonCanvas(PlayerDialogueButtonCanvas);
         }
     }
 

@@ -26,6 +26,7 @@ public class NPCQuest : MonoBehaviour
 
     DialogueList_NPC dialogueList;
     [SerializeField] TextAsset jsonDialogue;
+    private GameObject playerDialogueCanvas;
 
     public GameObject MapQuestMark;
 
@@ -53,6 +54,7 @@ public class NPCQuest : MonoBehaviour
                     canChangeLine = false;
                     acceptButton.onClick.RemoveListener(() => { AcceptQuest(); });
                     rejectButton.onClick.RemoveListener(() => { RejectQuest(); });
+                    if (isPlayer) playerDialogueCanvas.SetActive(false);
                     DialogueIndex = 0; //임의 설정. 일상 대화가 있는 index로 설정해주는 부분
                     if (day == 1 && mission.Equals("Cleaning")) {
                         DialogueIndex = -1;
@@ -100,7 +102,8 @@ public class NPCQuest : MonoBehaviour
         canChangeLine = true;
         currentLineIndex = 0;
         QuestPopup.SetActive(false);
-        
+        if (isPlayer) playerDialogueCanvas.SetActive(false);
+
         if (isQuestNPC)
         {
             
@@ -218,6 +221,7 @@ public class NPCQuest : MonoBehaviour
         ChoiceUI.SetActive(false);
         DialogueCanvas.SetActive(false);
         QuestPopup.SetActive(true);
+        if (isPlayer) playerDialogueCanvas.SetActive(true);
     }
 
     public void SetDialogueUI(GameObject DialogueCanvas, GameObject ChoiceUI) {
@@ -227,6 +231,10 @@ public class NPCQuest : MonoBehaviour
 
     public void SetIsPlayerTrue() {
         isPlayer = true;
+    }
+
+    public void setPlayerDialogueButtonCanvas(GameObject canvas) {
+        playerDialogueCanvas = canvas;
     }
 
     /*

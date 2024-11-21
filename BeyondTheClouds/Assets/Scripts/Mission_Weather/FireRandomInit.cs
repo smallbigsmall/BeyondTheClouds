@@ -15,6 +15,7 @@ public class FireRandomInit : MissionSettingWithQuest
     public void FireComplete() {
         fireCount -= 1;
         if (fireCount == 0) {
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
             _weatherMissionManager.MissionComplete();
             CompleteQuestUI();
         }
