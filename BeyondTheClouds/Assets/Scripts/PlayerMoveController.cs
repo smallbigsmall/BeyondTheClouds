@@ -47,12 +47,6 @@ public class PlayerMoveController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void FixedUpdate() {
 
         if (isMoving) {
@@ -128,23 +122,30 @@ public class PlayerMoveController : MonoBehaviour
         if (collision.CompareTag("Lighting")) {
             mainMapManager.DecreasePlayerHp(5);
         }
-        else if (collision.CompareTag("HouseDoor")) {
-            transform.position = new Vector2(2.7f, 0.4f);
-            mainMapManager.SetSkillPanel(false, false);
-        }
-        else if (collision.CompareTag("GardenDoor")) {
-            transform.position = new Vector2(52.5f, -78.3f);
-            mainMapManager.SetSkillPanel(false, false);
-        }
-        else if (collision.CompareTag("Portal")) {
-            transform.position = new Vector2(-3.5f,-20f);
-            mainMapManager.SetSkillPanel(true, true);
-        }else if (collision.CompareTag("Bed")) {
-            if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
-                Debug.Log("Clear daytime mission");
-                readyToFinishDay = true;
+        if (!onCloud) {
+            if (collision.CompareTag("HouseDoor")) {
+                transform.position = new Vector2(2.7f, 0.4f);
+                mainMapManager.SetSkillPanel(false, false);
             }
-        }
+            else if (collision.CompareTag("GardenDoor")) {
+                //if (!mainMapManager.GetAllMissionAccepted()) return;
+                transform.position = new Vector2(52.5f, -78.3f);
+                mainMapManager.SetSkillPanel(false, false);
+                mainMapManager.LeaveCloudMap();
+            }
+            else if (collision.CompareTag("Portal")) {
+                transform.position = new Vector2(-3.5f, -20f);
+                mainMapManager.SetSkillPanel(true, true);
+                mainMapManager.GoToCloudMap();
+            }
+            else if (collision.CompareTag("Bed")) {
+                if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
+                    Debug.Log("Clear daytime mission");
+                    readyToFinishDay = true;
+                }
+            }
+        }       
+
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
@@ -153,10 +154,13 @@ public class PlayerMoveController : MonoBehaviour
                 readyToFinishDay = false;
             }
         }
+
         if (collision.CompareTag("CloudMap") && onCloud) {
             onCloud = false;
             Destroy(movingCloud);
+            mainMapManager.TakeOffCloud();
         }
+
     }
 
     private void OnCollisionExit2D(Collision2D collision) {

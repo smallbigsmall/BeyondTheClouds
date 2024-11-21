@@ -27,7 +27,7 @@ public class WitSTT : MonoBehaviour
 
     public void SetSTTui(bool isAccept) {
 
-        Key = GameManager.Instance.getSttKey();
+        Key = GameManager.Instance.GetSttKey();
         isAcceptConversation = isAccept;
 
         if (isAccept)

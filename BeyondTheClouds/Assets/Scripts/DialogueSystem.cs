@@ -48,7 +48,6 @@ public class DialogueSystem : MonoBehaviour
     private bool isPrologue;
     private int roomCount = 0;
     private Transform sceneCamera;
-    private char gender;
     private List<Sprite> playerSprites;
     private SpriteRenderer playerRenderer;
     void Start()
@@ -68,17 +67,19 @@ public class DialogueSystem : MonoBehaviour
         totalDialogue = JsonUtility.FromJson<DialogueList>(textAsset.ToString());
         dialogueList = totalDialogue.dialogues;
 
-        gender = GameManager.Instance.GetCurrentPlayerData().gender;
-        if (gender == 'f') playerSprites = fPlayerSprites;
-        else playerSprites = mPlayerSprites;
-
         if (!isPrologue) Display();
+    }
+
+    public void SetPlayerSprite(int gender) {
+        gender = GameManager.Instance.GetCurrentPlayerData().gender;
+        if (gender == 2) playerSprites = fPlayerSprites;
+        else playerSprites = mPlayerSprites;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && onePartFinished) {
+        if (Input.GetKeyDown(KeyCode.Space) && onePartFinished) {
             Next();
         }
     }
@@ -173,6 +174,8 @@ public class DialogueSystem : MonoBehaviour
         else
             GameManager.Instance.SetCurrentPlayerData(
                 GameManager.Instance.GetCurrentPlayerData().stageNum + 1, false);
+
+        PlayerDataManager.Instance.UpdatePlayerData(GameManager.Instance.GetCurrentPlayerData());
         dialogueText.transform.parent.gameObject.SetActive(false);
         endPanel.SetActive(true);
 

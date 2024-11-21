@@ -6,14 +6,14 @@ using UnityEngine;
 
 public class ResetData : MonoBehaviour
 {
-    public char player_gender;
+    public int player_gender;
     public int day;
     public bool dayCleared;
 
     private void OnApplicationQuit() {
         string filePath = Application.persistentDataPath + "/PlayerData.json";
         if (File.Exists(filePath)) {
-            if((player_gender != 'f' && player_gender != 'm') || (day<=0 && day >= 8)) {
+            if((player_gender != 1 && player_gender != 2) || (day<=0 && day >= 8)) {
                 Debug.Log("Reset data");
                 try {
                     File.Delete(filePath);

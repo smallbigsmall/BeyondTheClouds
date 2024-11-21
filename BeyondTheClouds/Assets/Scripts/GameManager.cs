@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
     //전체적인 게임 흐름 관리
     //MainMap scene으로 넘어가면 그 scene의 매니저에게 필요한 정보 넘겨주기
 
-    private string sttKey = "";
-
     private PlayerData playerData;
     private void Awake() {
         if (Instance != null && Instance != this) {
@@ -20,9 +18,6 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
-        //stage 단계에서 내부 값 변경
-        playerData = new PlayerData();
     }
 
     public void LoadMainMenu() {
@@ -35,20 +30,15 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        playerData = new PlayerData();
+        playerData.gender = PlayerDataManager.Instance.GetPlayerData().gender;
     }
 
     public PlayerData GetCurrentPlayerData() {
         return playerData;
     }
 
-    public void SetCurrentPlayerGender(char gender) {
+    public void SetCurrentPlayerGender(int gender) {
         playerData.gender = gender;
     }
 
@@ -58,11 +48,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void setSttKey(string key) {
-        sttKey = key;
+    public void SetSttKey(string key) {
+        playerData.sttKey = key;
     }
 
-    public string getSttKey() {
-        return sttKey;
+    public string GetSttKey() {
+        return playerData.sttKey;
     }
 }

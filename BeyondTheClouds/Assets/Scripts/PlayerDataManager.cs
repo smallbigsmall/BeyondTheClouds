@@ -21,17 +21,14 @@ public class PlayerDataManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        playerData = new PlayerData();
+        //playerData = new PlayerData();
+        playerData = LoadPlayerData();
     }
 
 
     public void SavePlayerData() {
         PlayerData currentData = GameManager.Instance.GetCurrentPlayerData();
-        Debug.Log($"Save data: {currentData.gender} {currentData.stageNum} {currentData.dayCleared}");
-        if (currentData.stageNum > playerData.stageNum || 
-            (currentData.stageNum == playerData.stageNum && currentData.dayCleared != playerData.dayCleared)) {
-            UpdatePlayerData(currentData.stageNum, currentData.dayCleared);
-        }
+        UpdatePlayerData(currentData);
         string write_str = JsonUtility.ToJson(playerData);
         File.WriteAllText(filePath, write_str);
         Debug.Log($"Save Player Data in {filePath}");
@@ -55,27 +52,32 @@ public class PlayerDataManager : MonoBehaviour
 
     }
 
-    public int GetSavedStageNum() {
-        return playerData.stageNum;
+    public void UpdatePlayerData(PlayerData currentPlayerData) {
+        //whenever mission finished, update player data
+        // playerData vs currentPlayerData
+        if(playerData.gender != currentPlayerData.gender) {
+            playerData.gender = currentPlayerData.gender;
+        }
+
+        if(playerData.stageNum < currentPlayerData.stageNum) {
+            playerData.stageNum = currentPlayerData.stageNum;
+        }else if(playerData.stageNum == currentPlayerData.stageNum) {
+            if(!playerData.dayCleared && currentPlayerData.dayCleared) {
+                playerData.dayCleared = true;
+            }
+        }
+
+        if(playerData.sttKey != currentPlayerData.sttKey) {
+            playerData.sttKey = currentPlayerData.sttKey;
+        }
     }
 
-    public bool GetSavedDayCleared() {
-        return playerData.dayCleared;
-    }
-
-    public void SetPlayerGender(char gender) {
-        playerData.gender = gender;
-    }
-
-    public void UpdatePlayerData(int day, bool dayCleared) {
-        playerData.stageNum = day;
-        playerData.dayCleared = dayCleared;
+    public PlayerData GetPlayerData() {
+        return playerData;
     }
 
     private void OnApplicationQuit() {
         SavePlayerData();
     }
-
-    
 
 }

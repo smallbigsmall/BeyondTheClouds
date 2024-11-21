@@ -59,8 +59,6 @@ public class Cloud : MonoBehaviour
         var cloudColor = GetComponent<SpriteRenderer>().color;
         if (cloudColor.a < 1) return;
         rainSystem.gameObject.SetActive(true);
-/*        ParticleSystem particle = transform.GetChild(0).GetComponent<ParticleSystem>();
-        particle.Play();*/
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {

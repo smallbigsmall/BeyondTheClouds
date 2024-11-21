@@ -14,6 +14,9 @@ public class MainMapManager : MonoBehaviour
     [SerializeField]
     private GameObject mPlayer;
 
+    [SerializeField]
+    private GameObject fadeOutImg;
+
     [Header("Night Mission Setting")]
     [SerializeField]
     private List<GameObject> nightEnemyPrefList;
@@ -39,6 +42,10 @@ public class MainMapManager : MonoBehaviour
 
     [SerializeField]
     private RoomCleaner roomCleaner;
+
+    [SerializeField]
+    private CompositeCollider2D borderCollider;
+
     private GameObject MyGardenQuestMark;
 
     private List<Dictionary<string, Vector2>> regionList;
@@ -46,19 +53,19 @@ public class MainMapManager : MonoBehaviour
     private float boundOffset = 3.5f;
     private int playerHp = 100;
     private int nightEnemyNum = 1;
+    private Transform cloudMap;
 
     private Image confidenceFilledImg;
     private TextMeshProUGUI confidencePercent;
 
     PlayerData currentPlayerData;
-    // Start is called before the first frame update
 
     private Transform player;
 
     private TextMeshProUGUI resultText, gameEndGuideText;
     private Button nextStepBtn, stageBtn;
     private GameObject skillPanel;
-    private Image fadeOutBackground;
+    private bool allMissionAccepted;
 
     private void Awake() {
         currentPlayerData = GameManager.Instance.GetCurrentPlayerData();
@@ -66,12 +73,14 @@ public class MainMapManager : MonoBehaviour
 
     private void InitializeMainMap() {
         // Instantiate player prefab
-        if(currentPlayerData.gender == 'f') {
+        if(currentPlayerData.gender == 2) {
             player = Instantiate(fPlayer).transform;
         }
         else {
             player = Instantiate(mPlayer).transform;
         }
+
+        Debug.Log("Current day: " + currentPlayerData.stageNum);
 
         GameObject.FindWithTag("MainCamera").GetComponent<CameraController>().FindPlayer(player.transform);
         skillPanel = FindAnyObjectByType<PlayerSkillManager>().gameObject;
@@ -194,8 +203,8 @@ public class MainMapManager : MonoBehaviour
         nightEnemyNum--;
         if(nightEnemyNum == 0) {
             int currentDay = currentPlayerData.stageNum;
-            GameManager.Instance.SetCurrentPlayerData(currentDay, true);
-            PlayerDataManager.Instance.UpdatePlayerData(currentDay + 1, false);
+            GameManager.Instance.SetCurrentPlayerData(currentDay+1, false);
+            PlayerDataManager.Instance.UpdatePlayerData(GameManager.Instance.GetCurrentPlayerData());
             Debug.Log($"{currentPlayerData.stageNum} night game clear");
 
             gameEndPanel.gameObject.SetActive(true);
@@ -205,22 +214,23 @@ public class MainMapManager : MonoBehaviour
 
     private void SetGameEndUI(bool isNight, bool isCleared) {
         if (!isNight) {
-            gameEndGuideText.text = "Night ������ �÷����Ͻðڽ��ϱ�?";
+            gameEndGuideText.text = "Night 게임을 플레이하시겠습니까?";
             resultText.text = "Mission Clear";
         }
         else {
             if (isCleared) {
-                gameEndGuideText.text = "���� ��¥��\n�÷����Ͻðڽ��ϱ�?";
+                gameEndGuideText.text = "다음 날짜를\n플레이하시겠습니까?";
                 resultText.text = "Game Clear";
             }
             else {
-                gameEndGuideText.text = "�ٽ� �÷����Ͻðڽ��ϱ�?";
+                gameEndGuideText.text = "다시 플레이하시겠습니까?";
                 resultText.text = "Game Over";
             }
-        }        
+        }
     }
 
     public void FinishDay() {
+        fadeOutImg.SetActive(true);
         StartCoroutine(FadeOut());
     }
 
@@ -229,7 +239,7 @@ public class MainMapManager : MonoBehaviour
         while(alpha < 1) {
             alpha += 0.01f;
             yield return new WaitForSeconds(0.01f);
-            fadeOutBackground.color = new Color(0, 0, 0, alpha);
+            fadeOutImg.GetComponent<Image>().color = new Color(0, 0, 0, alpha);
         }
         SetGameEndUI(false, true);
     }
@@ -268,6 +278,26 @@ public class MainMapManager : MonoBehaviour
         }
     }
 
+    public void GoToCloudMap() {
+        borderCollider.isTrigger = true;
+    }
+
+    public void LeaveCloudMap() {
+        borderCollider.isTrigger = false;
+    }
+
+    public void TakeOffCloud() {
+        cloudMap.GetComponent<CompositeCollider2D>().isTrigger = false;
+    }
+
+    public void SetAllMissionAccepted(bool accepted) {
+        allMissionAccepted = accepted;
+    }
+
+    public bool GetAllMissionAccepted() {
+        return allMissionAccepted;
+    }
+
     void Start()
     {
         InitializeMainMap();
@@ -276,15 +306,11 @@ public class MainMapManager : MonoBehaviour
         gameEndGuideText = gameEndPanel.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
         nextStepBtn = gameEndPanel.GetChild(1).GetChild(1).GetComponent<Button>();
         stageBtn = gameEndPanel.GetChild(1).GetChild(2).GetComponent<Button>();
-        fadeOutBackground = gameEndPanel.parent.GetChild(1).GetComponent<Image>();
 
         nextStepBtn.onClick.AddListener(ReloadMainMap);
         stageBtn.onClick.AddListener(GoToMainMenu);
+
+        cloudMap = GameObject.FindWithTag("CloudMap").transform;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

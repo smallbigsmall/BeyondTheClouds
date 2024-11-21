@@ -12,7 +12,7 @@ public class STTbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void Start()
     {
-        if (GameManager.Instance.getSttKey().Equals(""))
+        if (GameManager.Instance.GetSttKey().Equals(""))
         {
             gameObject.GetComponent<Button>().interactable = false;
         }
@@ -32,12 +32,12 @@ public class STTbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        if(!GameManager.Instance.getSttKey().Equals(""))
+        if(!GameManager.Instance.GetSttKey().Equals(""))
             popup.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData) {
-        if (!GameManager.Instance.getSttKey().Equals(""))
+        if (!GameManager.Instance.GetSttKey().Equals(""))
             popup.SetActive(false);
     }
 }

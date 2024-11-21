@@ -24,7 +24,7 @@ public class StageManager : MonoBehaviour
 
     private void Awake() {
         if (PlayerDataManager.Instance != null) {
-            playerData = PlayerDataManager.Instance.LoadPlayerData();
+            playerData = PlayerDataManager.Instance.GetPlayerData();
         }
     }
     void Start()
@@ -87,7 +87,7 @@ public class StageManager : MonoBehaviour
 
     private void InitializePlusStage() {
         GameObject stageBtn = Instantiate(stageButtonPref);
-        stageBtn.transform.SetParent(stageListUI, true);
+        stageBtn.transform.SetParent(stageListUI.parent, true);
         //stageBtn.transform.SetSiblingIndex(totalStageCount+1);
         stageBtn.transform.localScale = new Vector3(1, 1, 1);
         stageBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Plus Stage";
@@ -180,5 +180,9 @@ public class StageManager : MonoBehaviour
 
     public int GetTotalStageCount() {
         return totalStageCount;
+    }
+
+    public void GoToStartScene() {
+        SceneManager.LoadScene("StartScene");
     }
 }

@@ -6,7 +6,8 @@ using UnityEngine;
 [Serializable]
 public class PlayerData 
 {
-    public char gender;
+    public int gender;  //1 -> male 2-> female
     public int stageNum;
     public bool dayCleared;
+    public string sttKey;
 }

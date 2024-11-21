@@ -14,7 +14,7 @@ public class PlayerSkillManager : MonoBehaviour
     private GameObject cloudPrefab;
 
     [SerializeField]
-    private Tilemap cloudMap;
+    private Tilemap cloudMap, mainMap;
 
     private PlayerSkill playerSkill;
 
@@ -28,9 +28,9 @@ public class PlayerSkillManager : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) {
-            /*if (EventSystem.current.IsPointerOverGameObject()) {
+            if (EventSystem.current.IsPointerOverGameObject()) {
                 return;
-            }*/
+            }
 
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
@@ -38,8 +38,6 @@ public class PlayerSkillManager : MonoBehaviour
             switch (playerSkill) {
                 case PlayerSkill.Creating: {
                         CheckTile(hit, pos);
-                        //Vector3Int tilePos = tilemap.WorldToCell(pos);
-                        //CheckTile(tilePos);
                     }
                     break;
                 case PlayerSkill.Raining: {
@@ -71,6 +69,7 @@ public class PlayerSkillManager : MonoBehaviour
                                 playerPos.y += 1f;
                                 player.position = playerPos;
                                 cloud.SetOwnerController(player.GetComponent<PlayerMoveController>());
+                                cloudMap.transform.GetComponent<CompositeCollider2D>().isTrigger = true;
                             }
                         }
                     }
@@ -91,12 +90,13 @@ public class PlayerSkillManager : MonoBehaviour
     }
 
     IEnumerator RemovingCloud(GameObject cloud) {
-        float totalLife = 3f;
+        float totalLife = 2f;
         float life = totalLife;
-        while(life > 0) {
-            life = life > 0 ? life - Time.deltaTime : 0;
-            var cloudColor = cloud.transform.GetComponent<SpriteRenderer>().color;
-            cloudColor.a = life / totalLife;
+        while(life > 0) {          
+            Color cloudColor = cloud.transform.GetComponent<SpriteRenderer>().color;
+            cloud.transform.GetComponent<SpriteRenderer>().color = new Color(
+                cloudColor.r, cloudColor.g, cloudColor.b, life / totalLife);
+            life -= Time.deltaTime;
             yield return new WaitForSeconds(0.001f);
         }
         Destroy(cloud);
@@ -104,8 +104,14 @@ public class PlayerSkillManager : MonoBehaviour
 
     private void CheckTile(RaycastHit2D hit, Vector2 pos) {
         if (hit.collider == null) {
-            Debug.Log("No collider, " + hit.transform);
-            return;
+            Vector3Int clickedPos = mainMap.WorldToCell(pos);
+            TileBase clickedTile = mainMap.GetTile(clickedPos);
+
+            if (clickedTile != null) {
+                Vector3 cloudPos = mainMap.CellToWorld(clickedPos);
+                GameObject cloudObj = Instantiate(cloudPrefab, cloudPos, Quaternion.identity);
+                return;
+            }
         }
 
         Tilemap clickedTilemap;
@@ -138,55 +144,9 @@ public class PlayerSkillManager : MonoBehaviour
                     break;
                 default:
                     break;
-            }
-
-            /*TileBase clickedTile = clickedTilemap.GetTile(tilePos);
-
-            if (clickedTile == null) {
-                Vector3Int cloudPos = new Vector3Int(tilePos.x + 1, tilePos.y + 1);
-                Debug.Log($"Current pos: {pos} and Cloud position: {new Vector3Int(tilePos.x, tilePos.y + 1)}");
-                GameObject cloudObj = Instantiate(cloudPrefab, clickedTilemap.CellToWorld(cloudPos), Quaternion.identity);
-                return;
-            }
-            int xPos = tilePos.x;
-            int yPos = tilePos.y;
-            while (yPos < clickedTilemap.cellBounds.yMax) {
-                yPos += 1;
-                TileBase upperTile = clickedTilemap.GetTile(new Vector3Int(xPos, yPos));
-
-                if (upperTile == null) {
-                    Debug.Log($"Current pos: {pos} and Cloud position: {clickedTilemap.CellToWorld(new Vector3Int(xPos, yPos))}");
-                    Vector3Int cloudPos = new Vector3Int(xPos + 1, yPos);
-                    GameObject cloudObj = Instantiate(cloudPrefab, clickedTilemap.CellToWorld(cloudPos), Quaternion.identity);
-                    return;
-                }
-            }*/
+            }          
         }
     }
-
-/*    private void CheckTile(Vector3Int pos) {
-        TileBase clickedTile = tilemap.GetTile(pos);
-
-        if(clickedTile == null) {
-            Vector3Int cloudPos = new Vector3Int(pos.x + 1, pos.y + 1);
-            Debug.Log($"Current pos: {pos} and Cloud position: {new Vector3Int(pos.x, pos.y + 1)}");
-            GameObject cloudObj = Instantiate(cloudPrefab, tilemap.CellToWorld(cloudPos), Quaternion.identity);
-            return;
-        }
-        int xPos = pos.x;
-        int yPos = pos.y;
-        while(yPos < tilemap.cellBounds.yMax) {
-            yPos += 1;
-            TileBase upperTile = tilemap.GetTile(new Vector3Int(xPos, yPos));
-
-            if(upperTile == null) {
-                Debug.Log($"Current pos: {pos} and Cloud position: {tilemap.CellToWorld(new Vector3Int(xPos, yPos))}");
-                Vector3Int cloudPos = new Vector3Int(xPos + 1, yPos);
-                GameObject cloudObj = Instantiate(cloudPrefab, tilemap.CellToWorld(cloudPos), Quaternion.identity);
-                return;
-            }
-        }
-    }*/
 
     public void SetPlayerSkill(int skillNum) {
         if(player == null) {

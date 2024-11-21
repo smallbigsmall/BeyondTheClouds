@@ -4240,7 +4240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b611d1e9a9eb9fb469cf39732c04b6e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player_gender: 0
+  player_gender: 67
   day: 0
   dayCleared: 0
 --- !u!4 &1835447080
