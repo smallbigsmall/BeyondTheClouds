@@ -61,6 +61,9 @@ public class PlayerDataManager : MonoBehaviour
 
         if(playerData.stageNum < currentPlayerData.stageNum) {
             playerData.stageNum = currentPlayerData.stageNum;
+            if(playerData.dayCleared && !currentPlayerData.dayCleared) {
+                playerData.dayCleared = false;
+            }
         }else if(playerData.stageNum == currentPlayerData.stageNum) {
             if(!playerData.dayCleared && currentPlayerData.dayCleared) {
                 playerData.dayCleared = true;
