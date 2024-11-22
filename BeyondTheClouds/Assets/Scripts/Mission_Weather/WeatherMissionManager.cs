@@ -45,6 +45,7 @@ public class WeatherMissionManager : MonoBehaviour
 
     [SerializeField] GameObject GardenQuestMark, PlayerDialogueButtonCanvas;
 
+    [SerializeField] MainMapManager _mainMapManager;
 
     //void Start()
     //{
@@ -277,8 +278,8 @@ public class WeatherMissionManager : MonoBehaviour
 
     public void IncreaseAcceptedQuest() {
         acceptedQuest++;
-        if (acceptedQuest == todayMissionCount) { 
-            //�� ��쿡�� ���� ���� �ö� �� ����. ���⿡ �ڵ� �߰�
+        if (acceptedQuest == todayMissionCount) {
+            _mainMapManager.SetAllMissionAccepted(true);
         }
     }
 }

@@ -127,13 +127,13 @@ public class PlayerMoveController : MonoBehaviour
                 transform.position = new Vector2(2.7f, 0.4f);
                 mainMapManager.SetSkillPanel(false, false);
             }
-            else if (collision.CompareTag("GardenDoor")) {
-                //if (!mainMapManager.GetAllMissionAccepted()) return;
+            else if (collision.CompareTag("GardenDoor")) {           
                 transform.position = new Vector2(52.5f, -78.3f);
                 mainMapManager.SetSkillPanel(false, false);
                 mainMapManager.LeaveCloudMap();
             }
             else if (collision.CompareTag("Portal")) {
+                if (!mainMapManager.GetAllMissionAccepted()) return;
                 transform.position = new Vector2(-3.5f, -20f);
                 mainMapManager.SetSkillPanel(true, true);
                 mainMapManager.GoToCloudMap();

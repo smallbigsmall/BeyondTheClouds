@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cloud : MonoBehaviour
 {
-    public Vector2Int pos;
+    public Vector2 pos;
     public bool forMoving;
     public bool isRaining;
 
@@ -38,14 +38,15 @@ public class Cloud : MonoBehaviour
         }
     }
 
-    public void SetTilePos(Vector2Int pos) {
+    public void SetPos(Vector2 pos) {
         this.pos = pos;
     }
 
-    public Vector2Int GetTilePos() {
+    public Vector2 GetPos() {
         return pos;
     }
 
+    
     public void SetOwnerController(PlayerMoveController controller) {
         ownerController = controller;
         ownerController.SetOnCloud(true);

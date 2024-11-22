@@ -37,6 +37,7 @@ public class PlayerSkillManager : MonoBehaviour
 
             switch (playerSkill) {
                 case PlayerSkill.Creating: {
+                        Debug.Log("Initial Pos: " + pos);
                         CheckTile(hit, pos);
                     }
                     break;
@@ -50,8 +51,14 @@ public class PlayerSkillManager : MonoBehaviour
                     break;
                 case PlayerSkill.Removing: {
                         GameObject hitObj = hit.transform.gameObject;
+                        if(hit.collider.name == "Shadow") {
+                            Debug.Log("Shadow");
+                            return;
+                        }
+                        Debug.Log(hit.collider.name);
                         if (hitObj.CompareTag("Cloud")) {
                             if (hitObj.GetComponent<Cloud>().forMoving) return;
+                            Cloud cloud = hitObj.transform.GetComponent<Cloud>();
                             StartCoroutine(RemovingCloud(hitObj));
                         }
                     }
@@ -110,11 +117,13 @@ public class PlayerSkillManager : MonoBehaviour
             if (clickedTile != null) {
                 Vector3 cloudPos = mainMap.CellToWorld(clickedPos);
                 GameObject cloudObj = Instantiate(cloudPrefab, cloudPos, Quaternion.identity);
+                cloudObj.transform.GetComponent<Cloud>().SetPos(cloudPos);
                 return;
             }
         }
 
         Tilemap clickedTilemap;
+        CropSetting crop;
 
         if(hit.transform.TryGetComponent<Tilemap>(out clickedTilemap)) {
             Vector3Int tilePos = clickedTilemap.WorldToCell(pos);
@@ -145,6 +154,9 @@ public class PlayerSkillManager : MonoBehaviour
                 default:
                     break;
             }          
+        }else if(hit.transform.TryGetComponent<CropSetting>(out crop)) {
+            Vector3 cloudPos = new Vector2(pos.x, pos.y + 3f);
+            GameObject cloudObj = Instantiate(cloudPrefab, cloudPos, Quaternion.identity);
         }
     }
 

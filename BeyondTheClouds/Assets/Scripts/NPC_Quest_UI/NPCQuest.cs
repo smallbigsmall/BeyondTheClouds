@@ -49,6 +49,7 @@ public class NPCQuest : MonoBehaviour
                 else
                 {
                     AddQuestUI();
+                    FindAnyObjectByType<WeatherMissionManager>().IncreaseAcceptedQuest();
                     isQuestNPC = false;
                     DialogueCanvas.SetActive(false);
                     canChangeLine = false;
