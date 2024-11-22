@@ -27,6 +27,7 @@ TagManager:
   - Bed
   - MyGarden
   - PlayerDialogueCollider
+  - Sound
   layers:
   - Default
   - TransparentFX

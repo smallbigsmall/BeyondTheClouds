@@ -10,10 +10,14 @@ public class CloudFadeOut : MonoBehaviour
     [SerializeField] GameObject Clouds;
     [SerializeField] WeatherMissionManager _weatherMissionManager;
     private int day;
+    public bool isMap;
 
     public void initCloud(int day) {
         this.day = day;
-        for (int i = 0; i < day - 2; i++)
+        int value = 2;
+        if (isMap) value = 1;
+
+        for (int i = 0; i < day - value; i++)
         { //3일차부터 시작시 구름 비활성화됨(2일차는 페이드아웃으로 비활성화)
             if (i < Clouds.transform.childCount)
                 Clouds.transform.GetChild(i).gameObject.SetActive(false);
