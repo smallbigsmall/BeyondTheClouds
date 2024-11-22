@@ -26,6 +26,8 @@ public class NightEnemy : MonoBehaviour
     [SerializeField]
     private GameObject lightAttackObj;
 
+    [SerializeField] AudioClip hitClip, destroyClip, thunderClip;
+    private AudioSource audioSource;
     
 
     // Start is called before the first frame update
@@ -34,6 +36,7 @@ public class NightEnemy : MonoBehaviour
         targetPlayer = GameObject.FindWithTag("Player").transform;
         lightSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GameObject.FindWithTag("Sound").transform.GetChild(1).GetComponent<AudioSource>();
     }
 
     private void FindNextRegion() {
@@ -149,6 +152,7 @@ public class NightEnemy : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             GameObject attackLight = Instantiate(lightAttackObj, new Vector2(targetPlayer.position.x, targetPlayer.position.y + 2), Quaternion.identity);
+            audioSource.PlayOneShot(thunderClip);
 
             yield return new WaitForSeconds(0.8f);
             Destroy(attackLight);
@@ -163,10 +167,15 @@ public class NightEnemy : MonoBehaviour
         lightSpriteColor.a = (float)currentlife / totalLife;
 
         lightSprite.color = lightSpriteColor;
-        if (currentlife == 0) {
+        if (currentlife == 0)
+        {
+            audioSource.PlayOneShot(destroyClip);
             mainMapManager = FindAnyObjectByType<MainMapManager>();
             mainMapManager.DecreaseNightEnemyCount();
             Destroy(gameObject);
+        }
+        else {
+            audioSource.PlayOneShot(hitClip);
         }
     }
 

@@ -16,7 +16,7 @@ public class SoundManager : MonoBehaviour
     {
         if (!isDayCleared)
         {
-            Invoke("StartBGM", 5);
+            Invoke("StartBGM", 6);
         }
         else {
             StartBGM();

@@ -103,6 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09809fc84d1d6a5478f5b647359f3cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doorClip: {fileID: 8300000, guid: a6b547a7999f7f34da037c95d816eeb1, type: 3}
+  portalClip: {fileID: 8300000, guid: ac1480c75d52c7f4da2c8ee1302c676f, type: 3}
   wind_projectile: {fileID: 2122849804754850108, guid: 4b693e02e9d17144fa98bbe3da4ab68e, type: 3}
   wand: {fileID: 150211919189168156, guid: af5e98b1dad43734e8952f3641069c01, type: 3}
 --- !u!50 &3522483898185241586

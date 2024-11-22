@@ -10,6 +10,9 @@ public class WindProjectile : MonoBehaviour
     private Vector2 shootDir;
     private bool isShooting;
     private float lifeTime = 2f;
+
+    [SerializeField] AudioClip attackClip;
+
     // Start is called before the first frame update
     void Start() {
         rigidbody = GetComponent<Rigidbody2D>();
@@ -45,6 +48,7 @@ public class WindProjectile : MonoBehaviour
     public void ShootWind(Vector2 dir) {
         shootDir = dir;
         isShooting = true;
+        GetComponent<AudioSource>().PlayOneShot(attackClip);
         StartCoroutine(StartExplode());
     }
 

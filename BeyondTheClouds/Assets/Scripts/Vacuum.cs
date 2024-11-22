@@ -13,6 +13,9 @@ public class Vacuum : MonoBehaviour
     {
         roomCleaner = FindAnyObjectByType<RoomCleaner>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        GetComponent<AudioSource>().Play();
+        GetComponent<AudioSource>().time = 3;
     }
 
     public void FlipVacuum(bool flipX) {

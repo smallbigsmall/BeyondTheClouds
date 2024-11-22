@@ -220,7 +220,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightAttackObj: {fileID: 2106007375048993835, guid: c2380ff9e28f8aa4296aee8ad153104c, type: 3}
-  cloudRegion: {fileID: 0}
+  hitClip: {fileID: 8300000, guid: 9a5600d9aafc96e449505a78c284b01b, type: 3}
+  destroyClip: {fileID: 8300000, guid: bc43b85eb2e1f9e4b9cea0c0549afb8c, type: 3}
+  thunderClip: {fileID: 8300000, guid: 08cdd3888774cda49bab6fa2bd47e31e, type: 3}
 --- !u!50 &1396690958802276001
 Rigidbody2D:
   serializedVersion: 4

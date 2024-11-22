@@ -64,8 +64,6 @@ public class RoomCleaner : MissionSettingWithQuest
         if(totalTrashNum == 0) {
             allCleaned = true;
             Debug.Log("All trash removed");
-            _weatherMissionManager.MissionComplete();
-            CompleteQuestUI();
         }
     }
 
@@ -76,5 +74,7 @@ public class RoomCleaner : MissionSettingWithQuest
     public void FinishCleaning() {
         if(playerVacuum != null) Destroy(playerVacuum);
         portal.SetActive(true);
+        _weatherMissionManager.MissionComplete();
+        CompleteQuestUI();
     }
 }

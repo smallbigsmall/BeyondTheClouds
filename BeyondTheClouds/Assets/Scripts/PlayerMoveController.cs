@@ -23,6 +23,9 @@ public class PlayerMoveController : MonoBehaviour
 
     private MainMapManager mainMapManager;
 
+    [SerializeField] AudioClip doorClip, portalClip;
+    private AudioSource audioSourceSFX;
+
     List<RaycastHit2D> castColisitions = new List<RaycastHit2D>();
 
     [SerializeField]
@@ -45,6 +48,8 @@ public class PlayerMoveController : MonoBehaviour
         else if(!isNight && transform.childCount > 0) {
             vacuum = transform.GetChild(0).GetComponent<Vacuum>();
         }
+
+        audioSourceSFX = GameObject.FindWithTag("Sound").transform.GetChild(1).GetComponent<AudioSource>();
     }
 
     private void FixedUpdate() {
@@ -124,16 +129,23 @@ public class PlayerMoveController : MonoBehaviour
         }
         if (!onCloud) {
             if (collision.CompareTag("HouseDoor")) {
+                audioSourceSFX.PlayOneShot(doorClip);
                 transform.position = new Vector2(2.7f, 0.4f);
                 mainMapManager.SetSkillPanel(false, false);
             }
-            else if (collision.CompareTag("GardenDoor")) {           
+            else if (collision.CompareTag("GardenDoor")) {
+                if (collision.gameObject.name.Equals("GardenDoor"))
+                    audioSourceSFX.PlayOneShot(doorClip);
+                else if (collision.gameObject.name.Equals("CloudDoor")) {
+                    audioSourceSFX.PlayOneShot(portalClip);
+                }
                 transform.position = new Vector2(52.5f, -78.3f);
                 mainMapManager.SetSkillPanel(false, false);
                 mainMapManager.LeaveCloudMap();
             }
             else if (collision.CompareTag("Portal")) {
                 if (!mainMapManager.GetAllMissionAccepted()) return;
+                audioSourceSFX.PlayOneShot(portalClip);
                 transform.position = new Vector2(-3.5f, -20f);
                 mainMapManager.SetSkillPanel(true, true);
                 mainMapManager.GoToCloudMap();

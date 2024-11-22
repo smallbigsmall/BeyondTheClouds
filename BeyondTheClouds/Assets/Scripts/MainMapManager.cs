@@ -101,8 +101,8 @@ public class MainMapManager : MonoBehaviour
         }
         else {
             player.position = new Vector2(53, -74);
-            cameraController.ShowMap();
-            //cameraController.FollowPlayer(); //delete after
+            if(currentPlayerData.stageNum != 1) cameraController.ShowMap();
+            if (currentPlayerData.stageNum == 1) cameraController.FollowPlayer();
             SetSkillPanel(false, true);
             confidenceBar.gameObject.SetActive(false);
             InitializeDatetimeGame();          

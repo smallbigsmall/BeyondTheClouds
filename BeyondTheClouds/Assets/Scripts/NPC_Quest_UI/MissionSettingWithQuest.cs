@@ -12,6 +12,7 @@ public class MissionSettingWithQuest : MonoBehaviour
 
     public void CompleteQuestUI() {
         Debug.Log("Mission complete!!! change the UI");
+        if (QuestUI == null) return;
         questMainImg = QuestUI.transform.GetChild(0).GetComponent<Image>();
         questMainImg.color = new Color(questMainImg.color.r, questMainImg.color.g, questMainImg.color.b, 0.5f);
         QuestUI.transform.GetChild(1).gameObject.SetActive(true);

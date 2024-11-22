@@ -12,6 +12,9 @@ public class CloudFadeOut : MonoBehaviour
     private int day;
     public bool isMap;
 
+    [SerializeField] AudioSource audioSourceSFX;
+    [SerializeField] AudioClip harpClip;
+
     public void initCloud(int day) {
         this.day = day;
         int value = 2;
@@ -47,7 +50,8 @@ public class CloudFadeOut : MonoBehaviour
     }
 
     IEnumerator Delay(Tilemap cloud) {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
+        audioSourceSFX.PlayOneShot(harpClip);
         StartCoroutine(FadeOut(cloud));
     }
 
@@ -59,6 +63,7 @@ public class CloudFadeOut : MonoBehaviour
             StartCoroutine(FadeOut(cloud));
         }
         else {
+            yield return new WaitForSeconds(2f);
             //여기에서 카메라 다시 원래대로 돌아간 뒤에 아래 실행되어야함
             GameObject.FindWithTag("MainCamera").GetComponent<CameraController>().FollowPlayer();
             cloud.gameObject.SetActive(false);
