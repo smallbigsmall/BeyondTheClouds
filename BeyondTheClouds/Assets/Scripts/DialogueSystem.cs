@@ -67,7 +67,13 @@ public class DialogueSystem : MonoBehaviour
         totalDialogue = JsonUtility.FromJson<DialogueList>(textAsset.ToString());
         dialogueList = totalDialogue.dialogues;
 
-        if (!isPrologue) Display();
+        if (!isPrologue)
+        {
+            int gender = GameManager.Instance.GetCurrentPlayerData().gender;
+            if (gender == 2) playerSprites = fPlayerSprites;
+            else playerSprites = mPlayerSprites;
+            Display();
+        }
     }
 
     public void SetPlayerSprite(int gender) {
