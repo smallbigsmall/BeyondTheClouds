@@ -60,6 +60,7 @@ public class CloudFadeOut : MonoBehaviour
         }
         else {
             //여기에서 카메라 다시 원래대로 돌아간 뒤에 아래 실행되어야함
+            GameObject.FindWithTag("MainCamera").GetComponent<CameraController>().FollowPlayer();
             cloud.gameObject.SetActive(false);
             cloud.color = new Color(cloud.color.r, cloud.color.g, cloud.color.b, 1);
             _weatherMissionManager.StartMissoinSetting(0, day);

@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private Transform player;
-    private float smoothing = 0.2f;
+    public float smoothing = 0.5f;
     public Vector2 minCameraBoundary;
     public Vector2 maxCameraBoundary;
     private bool playerLoaded;

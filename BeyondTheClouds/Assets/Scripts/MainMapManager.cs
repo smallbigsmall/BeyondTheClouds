@@ -101,7 +101,8 @@ public class MainMapManager : MonoBehaviour
         }
         else {
             player.position = new Vector2(53, -74);
-            cameraController.FollowPlayer(); //delete after
+            cameraController.ShowMap();
+            //cameraController.FollowPlayer(); //delete after
             SetSkillPanel(false, true);
             confidenceBar.gameObject.SetActive(false);
             InitializeDatetimeGame();          
@@ -258,7 +259,7 @@ public class MainMapManager : MonoBehaviour
     }
    
 
-    private void GoToMainMenu() {
+    public void GoToMainMenu() {
         SceneManager.LoadScene("MainMenu");
     }
 
