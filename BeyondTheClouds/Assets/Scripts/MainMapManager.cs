@@ -17,6 +17,9 @@ public class MainMapManager : MonoBehaviour
     [SerializeField]
     private GameObject fadeOutImg;
 
+    [SerializeField] 
+    private SoundManager _soundManager;
+
     [Header("Night Mission Setting")]
     [SerializeField]
     private List<GameObject> nightEnemyPrefList;
@@ -58,11 +61,10 @@ public class MainMapManager : MonoBehaviour
     private Image confidenceFilledImg;
     private TextMeshProUGUI confidencePercent;
 
-    [SerializeField] SoundManager _soundManager;
-
     PlayerData currentPlayerData;
 
     private Transform player;
+    private CameraController cameraController; 
 
     private TextMeshProUGUI resultText, gameEndGuideText;
     private Button nextStepBtn, stageBtn;
@@ -84,7 +86,7 @@ public class MainMapManager : MonoBehaviour
 
         Debug.Log("Current day: " + currentPlayerData.stageNum);
 
-        GameObject.FindWithTag("MainCamera").GetComponent<CameraController>().FindPlayer(player.transform);
+        cameraController.FindPlayer(player.transform);
         skillPanel = FindAnyObjectByType<PlayerSkillManager>().gameObject;
         player.transform.GetChild(1).GetComponent<NPCQuest>().MapQuestMark = MyGardenQuestMark;
 
@@ -94,10 +96,12 @@ public class MainMapManager : MonoBehaviour
             confidenceBar.gameObject.SetActive(true);
             confidenceFilledImg = confidenceBar.Find("Fill").GetComponent<Image>();
             confidencePercent = confidenceBar.Find("Percent").GetComponent<TextMeshProUGUI>();
+            cameraController.FollowPlayer();
             InitializeNighttimeGame();
         }
         else {
             player.position = new Vector2(53, -74);
+            cameraController.FollowPlayer(); //delete after
             SetSkillPanel(false, true);
             confidenceBar.gameObject.SetActive(false);
             InitializeDatetimeGame();          
@@ -244,6 +248,7 @@ public class MainMapManager : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
             fadeOutImg.GetComponent<Image>().color = new Color(0, 0, 0, alpha);
         }
+        gameEndPanel.gameObject.SetActive(true);
         SetGameEndUI(false, true);
     }
 
@@ -302,9 +307,7 @@ public class MainMapManager : MonoBehaviour
     }
 
     void Start()
-    {
-        InitializeMainMap();
-
+    {     
         resultText = gameEndPanel.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
         gameEndGuideText = gameEndPanel.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
         nextStepBtn = gameEndPanel.GetChild(1).GetChild(1).GetComponent<Button>();
@@ -314,6 +317,9 @@ public class MainMapManager : MonoBehaviour
         stageBtn.onClick.AddListener(GoToMainMenu);
 
         cloudMap = GameObject.FindWithTag("CloudMap").transform;
+        cameraController = GameObject.FindWithTag("MainCamera").GetComponent<CameraController>();
+
+        InitializeMainMap();
     }
 
 }

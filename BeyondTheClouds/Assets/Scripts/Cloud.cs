@@ -17,17 +17,10 @@ public class Cloud : MonoBehaviour
     [SerializeField]
     private ParticleSystem rainSystem;
    
-    // Start is called before the first frame update
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         mainMapManager = FindAnyObjectByType<MainMapManager>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void FixedUpdate() {
@@ -51,7 +44,6 @@ public class Cloud : MonoBehaviour
         ownerController = controller;
         ownerController.SetOnCloud(true);
         ownerController.SetMovingCloud(gameObject);
-        //rigidbody = transform.gameObject.AddComponent<Rigidbody2D>();
         rigidbody.bodyType = RigidbodyType2D.Kinematic;
     }
 
@@ -66,10 +58,6 @@ public class Cloud : MonoBehaviour
         if (collision.CompareTag("Border")) {
             mainMapManager.SetSkillPanel(true, false);
         }
-    }
-
-    private void OnParticleCollision(GameObject other) {
-        Debug.Log("Collision in cloud: "+other.name);
     }
 
 }

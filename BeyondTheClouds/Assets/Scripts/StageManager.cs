@@ -20,7 +20,7 @@ public class StageManager : MonoBehaviour
     private GameObject stageButtonPref, popUpUI;
 
     [SerializeField]
-    private Transform prologueBtn, endingBtn;
+    private Transform prologueBtn, endingBtn, plusStageBtn;
 
     private void Awake() {
         if (PlayerDataManager.Instance != null) {
@@ -41,12 +41,6 @@ public class StageManager : MonoBehaviour
 
         if (playerData.stageNum < totalStageCount) endingBtn.GetComponent<Button>().interactable = false;
         else if (playerData.stageNum > totalStageCount) InitializePlusStage();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void InitializeStage(int idx) {
@@ -86,14 +80,10 @@ public class StageManager : MonoBehaviour
     }
 
     private void InitializePlusStage() {
-        GameObject stageBtn = Instantiate(stageButtonPref);
-        stageBtn.transform.SetParent(stageListUI.parent, true);
-        //stageBtn.transform.SetSiblingIndex(totalStageCount+1);
-        stageBtn.transform.localScale = new Vector3(1, 1, 1);
-        stageBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Plus Stage";
-        stageBtn.transform.GetChild(1).gameObject.SetActive(false);
-
-        Stage initialStage = stageBtn.transform.GetComponent<Stage>();
+        plusStageBtn.gameObject.SetActive(true);
+        plusStageBtn.GetChild(1).GetComponent<Image>().color = new Color32(255, 255, 255, 0);
+        plusStageBtn.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Plus\nStage";
+        Stage initialStage = plusStageBtn.GetComponent<Stage>();
         initialStage.SetStageNum(totalStageCount + 1);
     }
 

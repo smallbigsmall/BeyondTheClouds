@@ -64,6 +64,10 @@ public class PlayerSkillManager : MonoBehaviour
                     }
                     break;
                 case PlayerSkill.Moving: {
+                        if (hit.collider != null && hit.collider.CompareTag("CloudMap")) {
+                            Debug.Log("Can not create moving cloud");
+                            return;
+                        }
                         MakingMovingCloud(pos);
                     }
                     break;
@@ -74,9 +78,10 @@ public class PlayerSkillManager : MonoBehaviour
                             if (cloud.forMoving) {
                                 Vector3 playerPos = cloud.transform.position;
                                 playerPos.y += 1f;
-                                player.position = playerPos;
+                                player.position = playerPos;                          
                                 cloud.SetOwnerController(player.GetComponent<PlayerMoveController>());
                                 cloudMap.transform.GetComponent<CompositeCollider2D>().isTrigger = true;
+
                             }
                         }
                     }

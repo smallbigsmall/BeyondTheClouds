@@ -31,7 +31,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerData = new PlayerData();
-        playerData.sttKey = "";
+        string sttKey = PlayerDataManager.Instance.GetPlayerData().sttKey;
+        playerData.sttKey = sttKey != null ? sttKey : "";
         playerData.gender = PlayerDataManager.Instance.GetPlayerData().gender;
     }
 

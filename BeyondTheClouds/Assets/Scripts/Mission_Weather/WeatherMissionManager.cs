@@ -245,6 +245,7 @@ public class WeatherMissionManager : MonoBehaviour
             GameObject newQuest = Instantiate(QuestUIPrefab);
             newQuest.transform.SetParent(QuestScrollView.transform);
             newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "이제 집으로\n돌아가자!";
+            GameManager.Instance.SetCurrentPlayerData(GameManager.Instance.GetCurrentPlayerData().stageNum, true);
         }
     }
 

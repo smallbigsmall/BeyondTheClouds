@@ -9,9 +9,12 @@ public class CameraController : MonoBehaviour
     public Vector2 minCameraBoundary;
     public Vector2 maxCameraBoundary;
     private bool playerLoaded;
+    private float defaultSize;
+    private Camera ownCamera;
 
     private void Start() {
-        
+        ownCamera = transform.GetComponent<Camera>();
+        defaultSize = ownCamera.orthographicSize;
     }
     private void FixedUpdate() {
         if (!playerLoaded) return;
@@ -25,10 +28,22 @@ public class CameraController : MonoBehaviour
     }
 
     public void FindPlayer(Transform player) {
-        this.player = player;
+        this.player = player;       
+    }
+
+    public void FollowPlayer() {
         playerLoaded = true;
         if (GameManager.Instance.GetCurrentPlayerData().dayCleared) {
-            transform.GetComponent<Camera>().orthographicSize = 8f;
+            ownCamera.orthographicSize = 8f;
+        }
+        else {
+            ownCamera.orthographicSize = defaultSize;
         }
     }
+
+    public void ShowMap() {
+        transform.position = new Vector3(0, 1, -10);
+        ownCamera.orthographicSize = 18;
+    }
+
 }
