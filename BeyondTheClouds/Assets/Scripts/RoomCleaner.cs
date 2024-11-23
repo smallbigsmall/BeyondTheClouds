@@ -11,7 +11,7 @@ public class RoomCleaner : MissionSettingWithQuest
     private Transform trashParent, trashZone;
 
     [SerializeField]
-    private GameObject portal, vacuum;  
+    private GameObject portal, vacuum, houseDoor;
 
     private int totalTrashNum;
     private bool allCleaned;
@@ -26,16 +26,16 @@ public class RoomCleaner : MissionSettingWithQuest
         
     }
 
-    public void InitializeRoomCleanMission() {
+    public void InitializeTrash() {
         portal.SetActive(false);
+        houseDoor.SetActive(false);
 
         totalTrashNum = trashParent.childCount;
 
-        for(int i = 0; i < trashParent.childCount; i++)
-        {
+        for (int i = 0; i < trashParent.childCount; i++) {
             trashParent.GetChild(i).gameObject.SetActive(true);
         }
-        
+
 
         int additionalTrashNum = Random.Range(5, 9);
         Vector2 minPos = trashZone.GetChild(1).position;
@@ -51,7 +51,10 @@ public class RoomCleaner : MissionSettingWithQuest
             GameObject trash = Instantiate(trashObjects[randObjIdx], new Vector3(randPosX, randPosY), Quaternion.identity);
             trash.transform.SetParent(trashParent);
         }
+    }
 
+    public void InitializeRoomCleanMission() {
+           
         player = GameObject.FindWithTag("Player").transform;
 
         playerVacuum = Instantiate(vacuum, player);
@@ -74,6 +77,7 @@ public class RoomCleaner : MissionSettingWithQuest
     public void FinishCleaning() {
         if(playerVacuum != null) Destroy(playerVacuum);
         portal.SetActive(true);
+        houseDoor.SetActive(true);
         _weatherMissionManager.MissionComplete();
         CompleteQuestUI();
     }

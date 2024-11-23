@@ -22,6 +22,20 @@ public class Vacuum : MonoBehaviour
         spriteRenderer.flipX = flipX;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.CompareTag("Bin")) {
+            Debug.Log("Bin entered");
+            binEntered = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision) {
+        if (collision.gameObject.CompareTag("Bin")) {
+            Debug.Log("Bin exited");
+            binEntered = false;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.CompareTag("Trash")) {
             roomCleaner.RemoveTrash();
@@ -29,6 +43,7 @@ public class Vacuum : MonoBehaviour
         }
 
         if (collision.CompareTag("Bin")) {
+            Debug.Log("Bin entered");
             binEntered = true;
         }
     }

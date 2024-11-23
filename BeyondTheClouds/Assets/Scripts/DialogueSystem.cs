@@ -177,10 +177,12 @@ public class DialogueSystem : MonoBehaviour
 
     private void EndDialogueSetting() {
         if (isPrologue) GameManager.Instance.SetCurrentPlayerData(0, true);
-        else
+        else {
+            Debug.Log("Ending stage num: " + GameManager.Instance.GetCurrentPlayerData().stageNum);
             GameManager.Instance.SetCurrentPlayerData(
                 GameManager.Instance.GetCurrentPlayerData().stageNum + 1, false);
-
+        }
+            
         PlayerDataManager.Instance.UpdatePlayerData(GameManager.Instance.GetCurrentPlayerData());
         dialogueText.transform.parent.gameObject.SetActive(false);
         endPanel.SetActive(true);

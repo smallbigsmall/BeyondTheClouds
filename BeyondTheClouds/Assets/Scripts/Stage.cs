@@ -33,10 +33,10 @@ public class Stage : MonoBehaviour
         _stageManager.SetSelectedStage(stageNum);
         Debug.Log("Stage Button Clicked: " + stageNum);
 
-        if(stageNum > totalStageCount) { // plus game
+        if(stageNum > totalStageCount + 1) { // plus game
             _stageManager.ActivatePopUp(false);
         }
-        else if (stageNum <= totalStageCount && dayCleared) {
+        else if (stageNum <= totalStageCount + 1 && dayCleared) {
             _stageManager.ActivatePopUp(true);
         }
         else {

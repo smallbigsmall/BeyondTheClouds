@@ -45,10 +45,7 @@ public class PlayerMoveController : MonoBehaviour
             playerWand.GetComponent<SpriteRenderer>().flipX = true;
             playerWand.localPosition = new Vector2(-0.57f, -0.39f);
         }
-        else if(!isNight && transform.childCount > 0) {
-            vacuum = transform.GetChild(0).GetComponent<Vacuum>();
-        }
-
+        
         audioSourceSFX = GameObject.FindWithTag("Sound").transform.GetChild(1).GetComponent<AudioSource>();
     }
 
@@ -76,7 +73,7 @@ public class PlayerMoveController : MonoBehaviour
             animator.SetFloat("YDir", movement.y);
 
             if(!isNight && vacuum != null) {
-                vacuum.FlipVacuum(movement.x < 0);
+                vacuum.FlipVacuum(movement.x > 0);
             }
 
             if(isNight && playerWand != null) {
@@ -192,7 +189,9 @@ public class PlayerMoveController : MonoBehaviour
                 wind.GetComponent<WindProjectile>().ShootWind(new Vector2(animator.GetFloat("XDir"), animator.GetFloat("YDir")));
             }
             else {
+                vacuum = transform.GetComponentInChildren<Vacuum>();
                 if (vacuum != null && vacuum.IsFinishingCleaningReady()) { //mission clear
+                    Debug.Log("Cleaning Mission Clear");
                     mainMapManager.CleaningMissionFinished();
                 }else if (readyToFinishDay) {
                     animator.SetFloat("XDir", -1);

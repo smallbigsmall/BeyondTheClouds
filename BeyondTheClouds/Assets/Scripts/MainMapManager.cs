@@ -114,6 +114,7 @@ public class MainMapManager : MonoBehaviour
         _soundManager.SetDay(currentPlayerData.stageNum, currentPlayerData.dayCleared);
         _cloudFadeOut.initCloud(currentPlayerData.stageNum);
         _cloudFadeOutMap.initCloud(currentPlayerData.stageNum);
+        if (currentPlayerData.stageNum == 1) roomCleaner.InitializeTrash();
         _cloudFadeOut.FadeOutCloud(currentPlayerData.stageNum);
     }
 

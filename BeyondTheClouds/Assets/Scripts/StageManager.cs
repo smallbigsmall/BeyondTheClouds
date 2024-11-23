@@ -9,7 +9,7 @@ public class StageManager : MonoBehaviour
 {
     // Start is called before the first frame update
     private int selectedStage = 0;
-    private int totalStageCount = 6;
+    private int totalStageCount = 5;
     private PlayerData playerData;
     private Button yesBtn, noBtn;
 
@@ -40,7 +40,7 @@ public class StageManager : MonoBehaviour
         }
 
         if (playerData.stageNum < totalStageCount) endingBtn.GetComponent<Button>().interactable = false;
-        else if (playerData.stageNum > totalStageCount) InitializePlusStage();
+        else if (playerData.stageNum > totalStageCount + 1) InitializePlusStage();
     }
 
     private void InitializeStage(int idx) {
@@ -84,7 +84,7 @@ public class StageManager : MonoBehaviour
         plusStageBtn.GetChild(1).GetComponent<Image>().color = new Color32(255, 255, 255, 0);
         plusStageBtn.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Plus\nStage";
         Stage initialStage = plusStageBtn.GetComponent<Stage>();
-        initialStage.SetStageNum(totalStageCount + 1);
+        initialStage.SetStageNum(totalStageCount + 2);
     }
 
     public void OnPrologueButtonClicked() {
@@ -99,13 +99,13 @@ public class StageManager : MonoBehaviour
     }
 
     public void OnEndingButtonClicked() {
-        selectedStage = totalStageCount;
+        selectedStage = totalStageCount + 1;
 
-        if (playerData.stageNum > totalStageCount || (playerData.stageNum == totalStageCount && playerData.dayCleared)) {
+        if (playerData.stageNum > selectedStage || (playerData.stageNum == selectedStage && playerData.dayCleared)) {
             popUpUI.SetActive(true);
             popUpUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text
                 = "Day time 게임을 이미 클리어했습니다.\n다시 Day time부터 플레이하시겠습니까?";
-        }else if(playerData.stageNum == totalStageCount && playerData.dayCleared) {
+        }else if(playerData.stageNum == selectedStage && !playerData.dayCleared) {
             SceneManager.LoadScene("MainMap");
         }
     }
@@ -135,8 +135,8 @@ public class StageManager : MonoBehaviour
             // Daytime play again?
             Debug.Log($"Play {selectedStage} day game");
         }
-        else { //extended map
-
+        else if(selectedStage == totalStageCount + 1) { //ending
+            Debug.Log("Play Ending Daytime");
         }
         GameManager.Instance.SetCurrentPlayerData(selectedStage, false); 
         GameManager.Instance.LoadMainMap();
@@ -144,26 +144,27 @@ public class StageManager : MonoBehaviour
     }
 
     private void OnNoButtonClicked() {
+        GameManager.Instance.SetCurrentPlayerData(selectedStage, true);
+
         if (selectedStage == 0) {  //prologue
             //SceneManager.LoadScene("MainMap");
             Debug.Log("Play first night game");
         }
-        else if (selectedStage < totalStageCount) { //stage
+        else if (selectedStage <= totalStageCount) { //stage
             // Daytime play again?
             Debug.Log($"Play {selectedStage} night game");           
         }
-        else if(selectedStage == totalStageCount) { //ending
+        else if(selectedStage == totalStageCount + 1) { //ending
             SceneManager.LoadScene("Ending");
             return;
         }
-
-        GameManager.Instance.SetCurrentPlayerData(selectedStage, true);
+       
         GameManager.Instance.LoadMainMap();
         popUpUI.SetActive(false);
     }
 
     public void SetSelectedStage(int stage) {
-        if(stage>0 && stage< totalStageCount) {
+        if(stage>0 && stage<= totalStageCount) {
             selectedStage = stage;
         }
     }
