@@ -8,6 +8,9 @@ public class SelectGender : MonoBehaviour
     [SerializeField]
     private GameObject genderPanel, dialogueBox;
 
+    [SerializeField]
+    private AudioSource audioSource;
+
     void Start()
     {
         PlayerData currentPlayerData = GameManager.Instance.GetCurrentPlayerData();
@@ -35,6 +38,7 @@ public class SelectGender : MonoBehaviour
 
         transform.GetComponent<DialogueSystem>().SetPlayerSprite(GameManager.Instance.GetCurrentPlayerData().gender);
         transform.GetComponent<DialogueSystem>().Display();
+        audioSource.Play();
     }
 
 }
