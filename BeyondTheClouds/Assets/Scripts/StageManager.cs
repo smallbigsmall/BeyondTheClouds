@@ -20,7 +20,7 @@ public class StageManager : MonoBehaviour
     private GameObject stageButtonPref, popUpUI;
 
     [SerializeField]
-    private Transform prologueBtn, endingBtn, plusStageBtn;
+    private Transform prologueBtn, endingBtn;
 
     private void Awake() {
         if (PlayerDataManager.Instance != null) {
@@ -80,11 +80,14 @@ public class StageManager : MonoBehaviour
     }
 
     private void InitializePlusStage() {
-        plusStageBtn.gameObject.SetActive(true);
-        plusStageBtn.GetChild(1).GetComponent<Image>().color = new Color32(255, 255, 255, 0);
-        plusStageBtn.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Plus\nStage";
-        Stage initialStage = plusStageBtn.GetComponent<Stage>();
-        initialStage.SetStageNum(totalStageCount + 2);
+        GameObject stageBtn = Instantiate(stageButtonPref);
+        stageBtn.transform.SetParent(stageListUI, true);
+        stageBtn.transform.SetSiblingIndex(totalStageCount+2);
+        stageBtn.transform.localScale = new Vector3(1, 1, 1);
+        stageBtn.transform.GetChild(1).GetComponent<Image>().color = new Color32(255, 255, 255, 0);
+        stageBtn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Plus\nStage";
+        Stage initialStage = stageBtn.GetComponent<Stage>();
+        initialStage.SetStageNum(playerData.stageNum);
     }
 
     public void OnPrologueButtonClicked() {
@@ -137,6 +140,8 @@ public class StageManager : MonoBehaviour
         }
         else if(selectedStage == totalStageCount + 1) { //ending
             Debug.Log("Play Ending Daytime");
+        }else if(selectedStage == totalStageCount + 2) {
+            Debug.Log("Play plus stage");
         }
         GameManager.Instance.SetCurrentPlayerData(selectedStage, false); 
         GameManager.Instance.LoadMainMap();
@@ -164,7 +169,7 @@ public class StageManager : MonoBehaviour
     }
 
     public void SetSelectedStage(int stage) {
-        if(stage>0 && stage<= totalStageCount) {
+        if(stage>0) {
             selectedStage = stage;
         }
     }

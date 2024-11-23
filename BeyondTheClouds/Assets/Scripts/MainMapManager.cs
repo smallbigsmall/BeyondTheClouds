@@ -125,8 +125,9 @@ public class MainMapManager : MonoBehaviour
         // adjust for loop bound
 
         int stage = currentPlayerData.stageNum;
-        nightEnemyNum = Random.Range(7-stage, 10-stage);
-        for(int i = 0; i<nightEnemyNum; i++) {
+        if (stage <= 6) nightEnemyNum = Random.Range(7 - stage, 10 - stage);
+        else nightEnemyNum = Random.Range(4, 9);
+        for (int i = 0; i<nightEnemyNum; i++) {
             SpawnEnemy();
         }
         _soundManager.SetDay(currentPlayerData.stageNum, currentPlayerData.dayCleared);
@@ -240,6 +241,7 @@ public class MainMapManager : MonoBehaviour
 
     public void FinishDay() {
         fadeOutImg.SetActive(true);
+        PlayerDataManager.Instance.UpdatePlayerData(GameManager.Instance.GetCurrentPlayerData());
         StartCoroutine(FadeOut());
     }
 
@@ -255,8 +257,13 @@ public class MainMapManager : MonoBehaviour
     }
 
     private void ReloadMainMap() {
-        string mainMap = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(mainMap);
+        if(currentPlayerData.stageNum==6 && currentPlayerData.dayCleared) {
+            SceneManager.LoadScene("Ending");
+        }
+        else {
+            string mainMap = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(mainMap);
+        }       
     }
    
 

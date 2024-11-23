@@ -44,6 +44,7 @@ public class Cloud : MonoBehaviour
         ownerController = controller;
         ownerController.SetOnCloud(true);
         ownerController.SetMovingCloud(gameObject);
+        mainMapManager.SetSkillPanel(true, false);
         rigidbody.bodyType = RigidbodyType2D.Kinematic;
     }
 
@@ -54,10 +55,10 @@ public class Cloud : MonoBehaviour
         rainSystem.gameObject.SetActive(true);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) {
+    /*private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.CompareTag("Border")) {
             mainMapManager.SetSkillPanel(true, false);
         }
-    }
+    }*/
 
 }

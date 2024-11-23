@@ -167,6 +167,7 @@ public class PlayerMoveController : MonoBehaviour
         if (collision.CompareTag("CloudMap") && onCloud) {
             onCloud = false;
             Destroy(movingCloud);
+            mainMapManager.SetSkillPanel(true, true);
             mainMapManager.TakeOffCloud();
         }
 

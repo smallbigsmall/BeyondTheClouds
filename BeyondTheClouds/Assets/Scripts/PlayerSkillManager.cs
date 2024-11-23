@@ -125,10 +125,15 @@ public class PlayerSkillManager : MonoBehaviour
                 cloudObj.transform.GetComponent<Cloud>().SetPos(cloudPos);
                 return;
             }
+            else {
+                return;
+            }
         }
 
         Tilemap clickedTilemap;
         CropSetting crop;
+        FlowerSetting flower;
+        Fire_rainCout fire;
 
         if(hit.transform.TryGetComponent<Tilemap>(out clickedTilemap)) {
             Vector3Int tilePos = clickedTilemap.WorldToCell(pos);
@@ -160,6 +165,13 @@ public class PlayerSkillManager : MonoBehaviour
                     break;
             }          
         }else if(hit.transform.TryGetComponent<CropSetting>(out crop)) {
+            Vector3 cloudPos = new Vector2(pos.x, pos.y + 3f);
+            GameObject cloudObj = Instantiate(cloudPrefab, cloudPos, Quaternion.identity);
+        }else if(hit.transform.TryGetComponent<FlowerSetting>(out flower)) {
+            Vector3 cloudPos = new Vector2(pos.x, pos.y + 3f);
+            GameObject cloudObj = Instantiate(cloudPrefab, cloudPos, Quaternion.identity);
+        }
+        else if (hit.transform.TryGetComponent<Fire_rainCout>(out fire)) {
             Vector3 cloudPos = new Vector2(pos.x, pos.y + 3f);
             GameObject cloudObj = Instantiate(cloudPrefab, cloudPos, Quaternion.identity);
         }
