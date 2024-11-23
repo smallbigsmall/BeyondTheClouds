@@ -50,5 +50,6 @@ public class HeatStroke : MonoBehaviour
         npcSpriteRenderer.color = color;
         heatStrokePopup.SetActive(false);
         _weatherMissionManager.MissionComplete();
+        transform.parent.GetComponent<MissionSettingWithQuest>().CompleteQuestUI();
     }
 }

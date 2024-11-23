@@ -39,7 +39,7 @@ public class WeatherMissionManager : MonoBehaviour
 
     [SerializeField] GameObject MyGarden, Farm2, Farm3, Waterfall, Forest, Mountain, Mine, MyHouse;
 
-    private int todayMissionCount = -1, randomStartIndex = -1;
+    private int todayMissionCount = -1, randomStartIndex = -1, todayMissionTotalCount = -1;
 
     [SerializeField] GameObject QuestUIPrefab, QuestScrollView;
 
@@ -73,6 +73,7 @@ public class WeatherMissionManager : MonoBehaviour
 
         todayMission = missionListOfDay[currentDay].missionList;
         todayMissionCount = todayMission.Count;
+        todayMissionTotalCount = todayMissionCount;
 
         for (int i = index; i < todayMissionCount; i++) {
             switch (todayMission[i].Mission_Type) {
@@ -279,7 +280,7 @@ public class WeatherMissionManager : MonoBehaviour
 
     public void IncreaseAcceptedQuest() {
         acceptedQuest++;
-        if (acceptedQuest == todayMissionCount) {
+        if (acceptedQuest == todayMissionTotalCount) {
             _mainMapManager.SetAllMissionAccepted(true);
         }
     }

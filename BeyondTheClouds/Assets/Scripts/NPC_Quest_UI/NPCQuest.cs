@@ -80,13 +80,16 @@ public class NPCQuest : MonoBehaviour
         newQuest.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = dialogueList.Missions[missionIndex].Dialogue[DialogueIndex].Quest;
         if (!isPlayer)
         {
-            GetComponentInParent<MissionSettingWithQuest>().QuestUI = newQuest;
-            GetComponentInParent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
+            transform.parent.GetComponent<MissionSettingWithQuest>().QuestUI = newQuest;
+            transform.parent.GetComponent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
         }
         else {
             GameObject myGarden = GameObject.FindWithTag("MyGarden");
-            myGarden.GetComponent<MissionSettingWithQuest>().QuestUI = newQuest;
-            myGarden.GetComponent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
+            if (mission.Equals("Cleaning")) FindAnyObjectByType<RoomCleaner>().QuestUI = newQuest;
+            else {
+                myGarden.GetComponent<MissionSettingWithQuest>().QuestUI = newQuest;
+                myGarden.GetComponent<MissionSettingWithQuest>().mapQuestMark = MapQuestMark;
+            }
         }
     }
 

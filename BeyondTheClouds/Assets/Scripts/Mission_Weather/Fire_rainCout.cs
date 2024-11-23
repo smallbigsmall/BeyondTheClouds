@@ -20,7 +20,7 @@ public class Fire_rainCout : MonoBehaviour
 
     private void OnEnable()
     {
-        life = 3;
+        life = 30;
         animSpeed = Random.Range(0.7f, 1f);
         gameObject.GetComponent<Animator>().speed = animSpeed;
     }

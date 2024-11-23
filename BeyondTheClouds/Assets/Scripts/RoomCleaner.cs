@@ -11,7 +11,7 @@ public class RoomCleaner : MissionSettingWithQuest
     private Transform trashParent, trashZone;
 
     [SerializeField]
-    private GameObject portal, vacuum, houseDoor;
+    private GameObject portal, vacuum, houseDoor, GoalPopUp;
 
     private int totalTrashNum;
     private bool allCleaned;
@@ -67,6 +67,7 @@ public class RoomCleaner : MissionSettingWithQuest
         if(totalTrashNum == 0) {
             allCleaned = true;
             Debug.Log("All trash removed");
+            GoalPopUp.SetActive(true);
         }
     }
 
@@ -78,6 +79,7 @@ public class RoomCleaner : MissionSettingWithQuest
         if(playerVacuum != null) Destroy(playerVacuum);
         portal.SetActive(true);
         houseDoor.SetActive(true);
+        GoalPopUp.SetActive(false);
         _weatherMissionManager.MissionComplete();
         CompleteQuestUI();
     }

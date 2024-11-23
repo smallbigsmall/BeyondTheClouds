@@ -90,7 +90,7 @@ public class FlowerSetting : MonoBehaviour
             if (lifeForShadow == 0) {
                 ColorUtility.TryParseHtmlString("#FFFFFF", out color); //white
                 flowerSpriteRenderer.color = color;
-                _myGardenSetting.countFlowerOverwatering();
+                _myGardenSetting.countFlowerComplete();
             }
         }
     }
