@@ -25,7 +25,9 @@ public class WitSTT : MonoBehaviour
     private string transcripting = "녹음이 완료되었습니다. 음성인식중...";
     private string warning = "음성인식 오류. 입력한 key가 유효한지 확인해주세요.";
 
-    public void SetSTTui(bool isAccept) {
+    private NPCQuest _npcQuest;
+
+    public void SetSTTui(bool isAccept, NPCQuest npcQuest) {
 
         Key = GameManager.Instance.GetSttKey();
         isAcceptConversation = isAccept;
@@ -42,6 +44,7 @@ public class WitSTT : MonoBehaviour
         recordingEndText.GetComponent<TextMeshProUGUI>().text = recordingEnd;
         STTUI.SetActive(true);
         recordingButton.interactable = true;
+        _npcQuest = npcQuest;
     }
 
     public void RecordingButton() {
@@ -150,10 +153,10 @@ public class WitSTT : MonoBehaviour
         {
             if (isAcceptConversation)
             {
-                GameObject.FindWithTag("Player").transform.GetChild(1).GetComponent<NPCQuest>().AcceptQuest();
+                _npcQuest.AcceptQuest();
             }
             else {
-                GameObject.FindWithTag("Player").transform.GetChild(1).GetComponent<NPCQuest>().RejectQuest();
+                _npcQuest.RejectQuest();
             }
             
         }

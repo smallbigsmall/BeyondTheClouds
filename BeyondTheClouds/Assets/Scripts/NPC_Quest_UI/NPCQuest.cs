@@ -106,6 +106,7 @@ public class NPCQuest : MonoBehaviour
         canChangeLine = true;
         currentLineIndex = 0;
         QuestPopup.SetActive(false);
+
         if (isPlayer) playerDialogueCanvas.SetActive(false);
 
         if (isQuestNPC)
@@ -200,6 +201,9 @@ public class NPCQuest : MonoBehaviour
                     ChoiceUI.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = NPCAccept;
                     ChoiceUI.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = NPCReject;
                 }
+
+                ChoiceUI.transform.GetChild(0).GetChild(1).GetComponent<STTbtn>().SetNPCQuest(this);
+                ChoiceUI.transform.GetChild(1).GetChild(1).GetComponent<STTbtn>().SetNPCQuest(this);
             }
             else {
                 DialogueCanvas.SetActive(false);
