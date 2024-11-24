@@ -28,6 +28,7 @@ TagManager:
   - MyGarden
   - PlayerDialogueCollider
   - Sound
+  - WaterfallSoil
   layers:
   - Default
   - TransparentFX
